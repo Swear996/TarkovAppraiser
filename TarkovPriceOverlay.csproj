@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>TarkovAppraiser</AssemblyName>
+    <Product>Tarkov Appraiser</Product>
+    <AssemblyTitle>Tarkov Appraiser</AssemblyTitle>
+    <ApplicationIcon>Assets\TarkovAppraiser.ico</ApplicationIcon>
+    <Version>1.4.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- the matcher tests are a separate project (Tests\MatcherTests.csproj, run with test.bat) -->
+    <Compile Remove="Tests\**" />
+    <None Remove="Tests\**" />
+  </ItemGroup>
+
+  <!-- official GitHub mark for the GitHub button (optional: without it a generic code icon is shown) -->
+  <ItemGroup Condition="Exists('Assets\github-mark-white.png')">
+    <EmbeddedResource Include="Assets\github-mark-white.png" LogicalName="github.png" />
+  </ItemGroup>
+
+</Project>

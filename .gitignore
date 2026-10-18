@@ -1,0 +1,8 @@
+bin/
+obj/
+dist/
+Tests/bin/
+Tests/obj/
+*.user
+.vs/
+release-notes.md
