@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Media.Ocr;
 
@@ -310,7 +310,7 @@ public sealed partial class SettingsForm : Form
         MinimumSize = new Size(WindowW, WindowH);
         MinimizeBox = true;
         StartPosition = FormStartPosition.CenterScreen;
-        TopMost = true;
+        TopMost = false;   // brought to the front once in OnShown
         Font = UiFont.Text(9.5f);
         DoubleBuffered = true;
 
@@ -431,6 +431,16 @@ public sealed partial class SettingsForm : Form
         SelectPage(0);
         HookLive(this);
         UpdateLive();
+    }
+
+    // opens in front of everything (also when started from the tray), but does not stay on top:
+    // clicking the Explorer or the browser puts them in front as usual
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        TopMost = true;
+        TopMost = false;
+        Activate();
     }
 
     protected override void OnHandleCreated(EventArgs e)

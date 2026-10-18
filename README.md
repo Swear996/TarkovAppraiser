@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="docs/banner.png" width="100%" alt="Tarkov Appraiser – prices for your Escape from Tarkov loot at a glance">
 </p>
 
@@ -6,6 +6,7 @@
   <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/Swear996/TarkovAppraiser?label=download&color=5b8cff" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-5b8cff" alt="Windows 10 | 11">
   <img src="https://img.shields.io/badge/.NET-10-5b8cff" alt=".NET 10">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-5b8cff" alt="MIT license"></a>
   <a href="https://tarkov.dev"><img src="https://img.shields.io/badge/prices-tarkov.dev-5b8cff" alt="Prices from tarkov.dev"></a>
 </p>
 
@@ -111,6 +112,7 @@ Press **Shift+F8** on the stack and type the right number – Tarkov Appraiser r
 
 **Something else is wrong.**
 *Settings › About › Report a problem* prepares a bug report with the log – or [open an issue](../../issues/new/choose).
+After an unexpected error, Tarkov Appraiser offers the report by itself (also at the next start if it had to close).
 
 ## How it works
 
@@ -150,6 +152,11 @@ reads the item name with the text recognition built into Windows and looks up th
   limited to fitness for a particular purpose. In no event shall the authors be liable for any claim,
   damages or other liability arising from its use.
 - GitHub and the GitHub logo are trademarks of GitHub, Inc.
+
+## License
+
+The source code of Tarkov Appraiser is released under the [MIT License](LICENSE). This covers the code only –
+not the game names, item pictures or price data mentioned above.
 
 ## Building from source
 

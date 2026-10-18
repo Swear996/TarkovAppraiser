@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Globalization;
@@ -29,8 +29,8 @@ static class Program
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
         Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-        Application.ThreadException += (_, e) => ReportCrash(e.Exception);
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportCrash(e.ExceptionObject as Exception);
+        Application.ThreadException += (_, e) => ReportCrash(e.Exception, fatal: false);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportCrash(e.ExceptionObject as Exception, fatal: true);
 
         SettingsStore.Load();   // also sets the program language
 
@@ -43,8 +43,8 @@ static class Program
         catch (AbandonedMutexException) { owned = true; }
         if (!owned)
         {
-            MessageBox.Show(L.T("Tarkov Appraiser is already running (tray icon, bottom right)."),
-                "Tarkov Appraiser", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UiDialog.Show(null, ThemePalette(), L.T("Already running"),
+                L.T("Tarkov Appraiser is already running (tray icon, bottom right)."), 0, "OK");
             return;
         }
 
@@ -61,24 +61,82 @@ static class Program
         }
     }
 
+    // colors of the chosen theme for the own message windows
+    public static UiDialog.Palette ThemePalette()
+    {
+        var s = SettingsStore.Current;
+        return new UiDialog.Palette(Themes.FromArgb(s.ThemeBackArgb), Themes.FromArgb(s.ThemePanelArgb),
+                                    Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
+    }
+
     static bool _reporting;   // one report window at a time (a broken UI can throw again and again)
 
-    static void ReportCrash(Exception? ex)
+    // saved when the program closes because of an error, so the next start can offer the report
+    static string CrashPath => Path.Combine(SettingsStore.Dir, "crash.txt");
+
+    // fatal = the program closes right after this (error outside the window thread)
+    static void ReportCrash(Exception? ex, bool fatal)
     {
         Log.Write("CRASH: " + ex, true);
+        if (fatal)
+        {
+            // if the window below can't be shown anymore, the next start asks instead
+            try { Directory.CreateDirectory(SettingsStore.Dir); File.WriteAllText(CrashPath, ex?.ToString() ?? "unknown error"); }
+            catch { }
+        }
         if (_reporting) return;
         _reporting = true;
         try
         {
-            var answer = MessageBox.Show(
-                L.T("Unexpected error:") + "\n" + ex?.Message + "\n\n" +
-                L.T("Report this problem? Tarkov Appraiser copies the details to the clipboard and opens the report page - nothing is sent automatically."),
-                "Tarkov Appraiser", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-            if (answer == DialogResult.Yes) BugReport.Send(ex);
+            string text = (fatal ? L.T("Tarkov Appraiser has to close because of an unexpected error.")
+                                 : L.T("An unexpected error happened. Tarkov Appraiser keeps running."))
+                          + "\n\n" + ex?.Message;
+            AskToReport(L.T("Something went wrong"), text, ex?.ToString(), ex);
+            if (fatal) DeleteCrashFile();
         }
         finally
         {
             _reporting = false;
         }
+    }
+
+    // next start after the program closed because of an error: offer the report once
+    public static void OfferLastCrashReport()
+    {
+        string details;
+        try
+        {
+            if (!File.Exists(CrashPath)) return;
+            details = File.ReadAllText(CrashPath);
+        }
+        catch { return; }
+        DeleteCrashFile();
+        AskToReport(L.T("Tarkov Appraiser closed unexpectedly"),
+            L.T("Last time Tarkov Appraiser closed because of an error. Send a report so it can be fixed?"),
+            details, null);
+    }
+
+    static void DeleteCrashFile()
+    {
+        try { File.Delete(CrashPath); } catch { }
+    }
+
+    // "Send report" / "Copy details" / "Close" - nothing is sent automatically
+    static void AskToReport(string title, string text, string? details, Exception? ex)
+    {
+        text += "\n\n" + L.T("\"Send report\" copies the details (version, Windows, error, end of the log) and opens the report page on GitHub. Nothing is sent automatically.");
+        int choice;
+        try
+        {
+            choice = UiDialog.Show(null, ThemePalette(), title, text, 0, L.T("Send report"), L.T("Copy details"), L.T("Close"));
+        }
+        catch (Exception dialogError)
+        {
+            // the own window can't be shown (broken UI): plain Windows message instead
+            Log.Write("Crash window: " + dialogError.Message, true);
+            choice = MessageBox.Show(text, "Tarkov Appraiser", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes ? 0 : 2;
+        }
+        if (choice == 0) BugReport.Send(details, ex);
+        else if (choice == 1) BugReport.Copy(details);
     }
 }

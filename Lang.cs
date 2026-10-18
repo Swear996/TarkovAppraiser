@@ -1,4 +1,4 @@
-namespace TarkovPriceOverlay;
+﻿namespace TarkovPriceOverlay;
 
 // ------------------------------------------------------------
 //  Program language. The English text is the key: L.T("Save") returns the German text when
@@ -38,6 +38,16 @@ static class L
         ["Tarkov Appraiser is already running (tray icon, bottom right)."] = "Tarkov Appraiser läuft bereits (Symbol unten rechts in der Taskleiste).",
         ["Unexpected error:"] = "Unerwarteter Fehler:",
         ["Details are saved in:"] = "Details stehen in:",
+        ["Already running"] = "Läuft bereits",
+        ["Something went wrong"] = "Etwas ist schiefgelaufen",
+        ["Tarkov Appraiser has to close because of an unexpected error."] = "Tarkov Appraiser muss wegen eines unerwarteten Fehlers beendet werden.",
+        ["An unexpected error happened. Tarkov Appraiser keeps running."] = "Ein unerwarteter Fehler ist aufgetreten. Tarkov Appraiser läuft weiter.",
+        ["Tarkov Appraiser closed unexpectedly"] = "Tarkov Appraiser wurde unerwartet beendet",
+        ["Last time Tarkov Appraiser closed because of an error. Send a report so it can be fixed?"] = "Beim letzten Mal wurde Tarkov Appraiser wegen eines Fehlers beendet. Einen Bericht senden, damit er behoben werden kann?",
+        ["\"Send report\" copies the details (version, Windows, error, end of the log) and opens the report page on GitHub. Nothing is sent automatically."] = "„Bericht senden“ kopiert die Details (Version, Windows, Fehler, Ende des Logs) und öffnet die Meldeseite auf GitHub. Es wird nichts automatisch gesendet.",
+        ["Send report"] = "Bericht senden",
+        ["Copy details"] = "Details kopieren",
+        ["Close"] = "Schließen",
 
         // ---- price box ----
         ["Pen"] = "Durchschl.",

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Windows.Media.Ocr;
 
 namespace TarkovPriceOverlay;
@@ -11,7 +11,8 @@ sealed class WelcomeForm : Form
 {
     const int W = 540, Pad = 28, CardW = W - 2 * Pad;
 
-    public bool OpenSettings { get; private set; }
+    public bool OpenSettings { get; private set; }      // "Let's go": the settings window opens next
+    public bool LanguageChanged { get; private set; }   // program language switched: opens again in the new language
 
     readonly Action<AppSettings> _test;
     readonly AppSettings _s;
@@ -34,7 +35,7 @@ sealed class WelcomeForm : Form
         Text = "Tarkov Appraiser";
         FormBorderStyle = FormBorderStyle.None;
         StartPosition = FormStartPosition.CenterScreen;
-        TopMost = true;
+        TopMost = false;   // brought to the front once in OnShown
         KeyPreview = true;
         DoubleBuffered = true;
         Font = UiFont.Text(9.5f);
@@ -43,7 +44,24 @@ sealed class WelcomeForm : Form
         Icon = _icon;
         _logo = Themes.Logo(128, _accent);
 
-        int y = 28;
+        // program language, top right (like on the website)
+        var lang = new LangSwitch
+        {
+            Selected = s.UiLanguage == "de" ? "de" : "en",
+            Accent = _accent, Border = _border, Muted = _muted,
+            ForeColor = _text, BackColor = _panel
+        };
+        lang.Left = W - Pad + 10 - lang.Width;
+        lang.Top = 14;
+        lang.LanguageChosen += code =>
+        {
+            _s.UiLanguage = code;
+            LanguageChanged = true;
+            BeginInvoke(new Action(Close));
+        };
+        Controls.Add(lang);
+
+        int y = 50;
         Controls.Add(new PictureBox
         {
             Image = _logo, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent,
@@ -94,13 +112,8 @@ sealed class WelcomeForm : Form
         var go = MakeButton(L.T("Let's go"), true);
         go.Left = W - Pad - go.Width;
         go.Top = y;
-        go.Click += (_, _) => Close();
-        var settings = MakeButton(L.T("Open settings"), false);
-        settings.Left = go.Left - 8 - settings.Width;
-        settings.Top = y;
-        settings.Click += (_, _) => { OpenSettings = true; Close(); };
+        go.Click += (_, _) => { OpenSettings = true; Close(); };
         Controls.Add(go);
-        Controls.Add(settings);
         AcceptButton = go;
         ClientSize = new Size(W, y + 34 + 24);
     }
@@ -193,6 +206,16 @@ sealed class WelcomeForm : Form
     {
         try { Process.Start(new ProcessStartInfo(target) { UseShellExecute = true }); }
         catch (Exception ex) { Log.Write("Could not open " + target + ": " + ex.Message); }
+    }
+
+    // opens in front of everything (also when started from the tray), but does not stay on top:
+    // clicking the Explorer or the browser puts them in front as usual
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        TopMost = true;
+        TopMost = false;
+        Activate();
     }
 
     protected override void OnHandleCreated(EventArgs e)

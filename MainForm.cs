@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Globalization;
@@ -305,13 +305,26 @@ class MainForm : Form
     // First start: short introduction (hotkey, text recognition check, test)
     void ShowWelcome()
     {
-        bool openSettings;
+        bool openSettings = false;
         try
         {
-            using var dlg = new WelcomeForm(SettingsStore.Current, PreviewOverlay);
-            dlg.ShowDialog();
-            openSettings = dlg.OpenSettings;
-            _overlay.HideNow();
+            Point? at = null;
+            bool again;
+            do   // switching the program language opens the window again in the new language, at the same place
+            {
+                using var dlg = new WelcomeForm(SettingsStore.Current, PreviewOverlay);
+                if (at is { } p) { dlg.StartPosition = FormStartPosition.Manual; dlg.Location = p; }
+                dlg.ShowDialog();
+                openSettings = dlg.OpenSettings;
+                again = dlg.LanguageChanged && !IsDisposed;
+                at = dlg.Location;
+                _overlay.HideNow();
+                if (dlg.LanguageChanged)
+                {
+                    SettingsStore.Save(SettingsStore.Current);   // also switches the program language
+                    ApplyTrayTheme();                             // tray menu in the new language
+                }
+            } while (again);
         }
         catch (Exception ex)
         {
@@ -656,6 +669,8 @@ class MainForm : Form
         if (Program.JustUpdated)
             _tray.ShowBalloonTip(5000, "Tarkov Appraiser", string.Format(L.T("Updated to version {0}."), Changelog.Current), ToolTipIcon.Info);
 
+        BeginInvoke(new Action(Program.OfferLastCrashReport));   // closed because of an error last time?
+
         if (!SettingsStore.Current.WelcomeDone)
             BeginInvoke(new Action(ShowWelcome));
         else if (!SettingsStore.Current.StartMinimized)
@@ -767,7 +782,7 @@ class MainForm : Form
         catch (Exception ex)
         {
             Log.Write("Settings window: " + ex, true);
-            MessageBox.Show(L.T("Settings window error:") + " " + ex.Message);
+            UiDialog.Show(null, Program.ThemePalette(), L.T("Something went wrong"), L.T("Settings window error:") + " " + ex.Message, 0, "OK");
         }
         finally
         {

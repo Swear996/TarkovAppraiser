@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 
 namespace TarkovPriceOverlay;
@@ -11,7 +11,9 @@ namespace TarkovPriceOverlay;
 static class BugReport
 {
     // the full report text (also used for the clipboard)
-    public static string Build(Exception? ex)
+    public static string Build(Exception? ex) => Build(ex?.ToString());
+
+    public static string Build(string? error)
     {
         var sb = new StringBuilder();
         sb.AppendLine($"Tarkov Appraiser {Changelog.Current}");
@@ -20,11 +22,11 @@ static class BugReport
         sb.AppendLine($"Language: game {s.ApiLanguage}, OCR {s.OcrLanguage}, program {s.UiLanguage}; mode {s.GameMode}");
         foreach (var screen in Screen.AllScreens)
             sb.AppendLine($"Screen: {screen.Bounds.Width}x{screen.Bounds.Height}{(screen.Primary ? " (primary)" : "")}");
-        if (ex != null)
+        if (!string.IsNullOrWhiteSpace(error))
         {
             sb.AppendLine();
             sb.AppendLine("Error:");
-            sb.AppendLine(ex.ToString());
+            sb.AppendLine(error);
         }
         sb.AppendLine();
         sb.AppendLine("Log (last lines):");
@@ -47,16 +49,21 @@ static class BugReport
     }
 
     // copies the report and opens the place to report it
-    public static void Send(Exception? ex)
+    public static void Send(Exception? ex) => Send(ex?.ToString(), ex);
+
+    // error = the full error text (also from a crash of the last start, when there is no exception object)
+    public static void Send(string? error, Exception? ex)
     {
-        string report = Build(ex);
+        string report = Build(error);
         CopyToClipboard(report);
 
         try
         {
             if (Updates.PageUrl is { } page)
             {
-                string title = ex != null ? "Crash: " + ex.GetType().Name + " - " + ex.Message : "Problem: ";
+                string title = ex != null ? "Crash: " + ex.GetType().Name + " - " + ex.Message
+                             : !string.IsNullOrWhiteSpace(error) ? "Crash: " + error.Split('\n')[0].Trim()
+                             : "Problem: ";
                 if (title.Length > 120) title = title[..120];
                 string body = "**What happened?**\n\n\n**What did you do before?**\n\n\n" +
                               "**Report** (Tarkov Appraiser put it into your clipboard - press Ctrl+V below this line):\n\n";
@@ -74,6 +81,9 @@ static class BugReport
             Log.Write("Problem report: " + e.Message, true);
         }
     }
+
+    // "Copy details": only the report into the clipboard (to send it some other way)
+    public static void Copy(string? error) => CopyToClipboard(Build(error));
 
     // the clipboard needs an STA thread (a crash may happen on any thread)
     static void CopyToClipboard(string text)

@@ -10,10 +10,18 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.7";
+    public const string Current = "1.8";
 
     public static readonly ChangelogEntry[] Entries =
     {
+        new("1.8", "2026-10-18", new[]
+        {
+            "New error window: after an unexpected error you can send a report with one click or copy the details. If the program had to close, it offers the report at the next start.",
+            "Tarkov Appraiser is now open source under the MIT license.",
+            "The message \"already running\" now matches the look of the program.",
+            "Welcome window: choose English or German at the top right; \"Let's go\" now opens the settings.",
+            "The settings window no longer stays on top of other programs like the Explorer or the browser."
+        }),
         new("1.7", "2026-10-18", new[]
         {
             "Now runs on .NET 10 (support for .NET 8 ends in November 2026). Please install the .NET 10 Desktop Runtime if Windows asks for it: dotnet.microsoft.com/download/dotnet/10.0",

@@ -788,3 +788,121 @@ public sealed class Collapsible : Control
         }
     }
 }
+
+/// <summary>Program language switch with flags: [🇺🇸 EN | 🇩🇪 DE] (like on the website).</summary>
+public sealed class LangSwitch : Control
+{
+    static readonly (string Code, string Label)[] Langs = { ("en", "EN"), ("de", "DE") };
+    int _hover = -1;
+
+    public string Selected { get; set; } = "en";
+    public Color Accent { get; set; } = Color.FromArgb(91, 140, 255);
+    public Color Border { get; set; } = Color.Gray;
+    public Color Muted { get; set; } = Color.Gray;
+    public event Action<string>? LanguageChosen;
+
+    public LangSwitch()
+    {
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+                 ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+        Cursor = Cursors.Hand;
+        Size = new Size(140, 30);
+    }
+
+    int SegmentAt(Point p) => p.X < Width / 2 ? 0 : 1;
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        int s = SegmentAt(e.Location);
+        if (s != _hover) { _hover = s; Invalidate(); }
+        base.OnMouseMove(e);
+    }
+
+    protected override void OnMouseLeave(EventArgs e) { _hover = -1; Invalidate(); base.OnMouseLeave(e); }
+
+    protected override void OnMouseClick(MouseEventArgs e)
+    {
+        base.OnMouseClick(e);
+        if (e.Button != MouseButtons.Left) return;
+        string code = Langs[SegmentAt(e.Location)].Code;
+        if (code == Selected) return;
+        Selected = code;
+        Invalidate();
+        LanguageChosen?.Invoke(code);
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        var g = e.Graphics;
+        UiPaint.Smooth(g);
+        var back = UiPaint.ParentBack(this);
+        g.Clear(back);
+
+        var outer = new RectangleF(0.5f, 0.5f, Width - 1.01f, Height - 1.01f);
+        using (var path = Themes.RoundRect(outer, Height / 2f))
+        using (var pen = new Pen(Border))
+            g.DrawPath(pen, path);
+
+        float segW = Width / 2f;
+        for (int i = 0; i < Langs.Length; i++)
+        {
+            bool sel = Langs[i].Code == Selected;
+            var seg = new RectangleF(i * segW + 3, 3, segW - 6, Height - 6);
+            Color fill = sel ? Themes.Blend(back, Accent, 0.28) : i == _hover ? Themes.Blend(back, ForeColor, 0.07) : back;
+            if (fill != back)
+            {
+                using var path = Themes.RoundRect(seg, seg.Height / 2f);
+                using var br = new SolidBrush(fill);
+                g.FillPath(br, path);
+            }
+
+            var font = sel ? UiFont.Semi(9f) : UiFont.Text(9f);
+            var textSize = TextRenderer.MeasureText(Langs[i].Label, font, Size.Empty, TextFormatFlags.NoPadding);
+            const float flagW = 20, flagH = 13, gap = 6;
+            float contentW = flagW + gap + textSize.Width;
+            float x = seg.X + (seg.Width - contentW) / 2f;
+            var flag = new RectangleF(x, (Height - flagH) / 2f, flagW, flagH);
+            if (Langs[i].Code == "en") DrawUs(g, flag); else DrawDe(g, flag);
+            using (var pen = new Pen(Color.FromArgb(60, 0, 0, 0)))
+                g.DrawRectangle(pen, flag.X, flag.Y, flag.Width, flag.Height);
+
+            var textRect = new Rectangle((int)(x + flagW + gap), 0, textSize.Width + 2, Height);
+            TextRenderer.DrawText(g, Langs[i].Label, font, textRect, sel ? ForeColor : Muted, fill,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+        }
+    }
+
+    // USA: 13 stripes, blue field with stars (as dots at this size)
+    static void DrawUs(Graphics g, RectangleF r)
+    {
+        var old = g.SmoothingMode;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+        using var red = new SolidBrush(Color.FromArgb(178, 34, 52));
+        using var white = new SolidBrush(Color.White);
+        using var blue = new SolidBrush(Color.FromArgb(60, 59, 110));
+        g.FillRectangle(white, r);
+        float sh = r.Height / 13f;
+        for (int i = 0; i < 13; i += 2)
+            g.FillRectangle(red, r.X, r.Y + i * sh, r.Width, sh);
+        var canton = new RectangleF(r.X, r.Y, r.Width * 0.4f, sh * 7);
+        g.FillRectangle(blue, canton);
+        g.SmoothingMode = old;
+        using var star = new SolidBrush(Color.FromArgb(220, 255, 255, 255));
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+                g.FillEllipse(star, canton.X + 1.2f + col * (canton.Width - 2.4f) / 2.6f,
+                                    canton.Y + 1f + row * (canton.Height - 2f) / 2.8f, 1.2f, 1.2f);
+    }
+
+    // Germany: black, red, gold
+    static void DrawDe(Graphics g, RectangleF r)
+    {
+        var old = g.SmoothingMode;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+        float h = r.Height / 3f;
+        using (var b = new SolidBrush(Color.FromArgb(20, 20, 20))) g.FillRectangle(b, r.X, r.Y, r.Width, h);
+        using (var b = new SolidBrush(Color.FromArgb(221, 0, 0))) g.FillRectangle(b, r.X, r.Y + h, r.Width, h);
+        using (var b = new SolidBrush(Color.FromArgb(255, 206, 0))) g.FillRectangle(b, r.X, r.Y + 2 * h, r.Width, r.Height - 2 * h);
+        g.SmoothingMode = old;
+    }
+}

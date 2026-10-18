@@ -1,4 +1,4 @@
-namespace TarkovPriceOverlay;
+﻿namespace TarkovPriceOverlay;
 
 // ------------------------------------------------------------
 //  Message / question window in the Tarkov Appraiser design (instead of the white Windows MessageBox).
@@ -8,7 +8,8 @@ sealed class UiDialog : Form
 {
     public sealed record Palette(Color Back, Color Panel, Color Text, Color Accent);
 
-    const int W = 420, Pad = 24;
+    const int Pad = 24;
+    readonly int W = 420;   // wider when the buttons need it
     int _result = -1;
     readonly Color _border;
     bool _regionFallback;
@@ -25,6 +26,8 @@ sealed class UiDialog : Form
         BackColor = p.Panel;
         Text = title;
         _border = Themes.Blend(p.Panel, p.Text, 0.16);
+        int buttonsW = buttons.Sum(b => Math.Max(96, TextRenderer.MeasureText(b, Font).Width + 36) + 8) - 8;
+        W = Math.Max(W, buttonsW + 2 * Pad);
 
         var titleLbl = new Txt
         {
