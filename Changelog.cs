@@ -20,7 +20,8 @@ public static class Changelog
             "Tarkov Appraiser is now open source under the MIT license.",
             "The message \"already running\" now matches the look of the program.",
             "Welcome window: choose English or German at the top right; \"Let's go\" now opens the settings.",
-            "The settings window no longer stays on top of other programs like the Explorer or the browser."
+            "The settings window no longer stays on top of other programs like the Explorer or the browser.",
+            "The GitHub button in the settings now shows the GitHub logo."
         }),
         new("1.7", "2026-10-18", new[]
         {
