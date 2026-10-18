@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Check that tag, Changelog and project version match
         shell: pwsh
@@ -35,7 +35,7 @@ jobs:
           $proj = Get-Content TarkovPriceOverlay.csproj -Raw
           if ($proj -notmatch ('<Version>' + [regex]::Escape($v) + '(\.0)?</Version>')) { throw "Tag v$v does not match <Version> in the .csproj" }
 
-      - name: Build (small, needs .NET 8)
+      - name: Build (small, needs .NET 10)
         run: dotnet publish TarkovPriceOverlay.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -o dist
 
       - name: Version without the "v" (release title "Tarkov Appraiser 1.5")
@@ -61,7 +61,7 @@ jobs:
             "## Download"
             "Download **TarkovAppraiser.exe** below and start it. Already using Tarkov Appraiser? It offers the update by itself."
             ""
-            "**Requirement:** [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) - the .NET 8 SDK or the .NET 8 Desktop Runtime has to be installed."
+            "**Requirement:** [.NET 10](https://dotnet.microsoft.com/download/dotnet/10.0) - the .NET 10 SDK or the .NET 10 Desktop Runtime has to be installed."
             ""
             "Windows may warn about an unknown app the first time: click *More info* > *Run anyway*."
             ""
