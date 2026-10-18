@@ -693,13 +693,48 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     return it;
   }
   const state = $("#liveState");
+  // ---- reserve: the static files of json.tarkov.dev (the same source as the program uses) ----
+  const JSON_BASE = () => "https://json.tarkov.dev/" + (S.mode === "pve" ? "pve" : "regular") + "/";
+  const jsonCache = {};
+  async function jsonFile(name) {
+    const key = JSON_BASE() + name;
+    if (!jsonCache[key]) jsonCache[key] = fetch(key).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    try { return await jsonCache[key]; } catch (e) { delete jsonCache[key]; throw e; }
+  }
+  // one item of the static file -> demo item (names come from the language file)
+  function fromJson(id, x, names, old) {
+    const it = old || { id, key: undefined };
+    const traders = (x.sellToTrader || []).filter(t => t.priceRUB > 0 && t.trader !== "579dc571d53a0658a154fbec")
+      .map(t => ({ name: Object.keys(TRADER_ID).find(n => TRADER_ID[n] === t.trader) || "Trader", price: t.priceRUB }))
+      .sort((a, b) => b.price - a.price);
+    const p = x.properties || {};
+    Object.assign(it, { id, w: x.width || it.w || 1, h: x.height || it.h || 1, base: x.basePrice || 0, low: x.lastLowPrice || 0,
+      avg: x.avg24hPrice || 0, traders, noFlea: (x.types || []).includes("noFlea"),
+      img: x.gridImageLink || it.img || ASSET(id) });
+    if (names) { it.name = names[id + " Name"] || it.name || id; it.short = names[id + " ShortName"] || it.short || it.name; }
+    if (p.penetrationPower != null) it.ammo = [p.penetrationPower, p.damage, p.armorDamage, p.projectileCount || 1];
+    if (p.uses != null && (x.types || []).includes("keys")) it.key = [it.key ? it.key[0] : "", it.key ? it.key[1] : null, p.uses];
+    return it;
+  }
+  async function loadFromJson() {
+    const d = await jsonFile("items");
+    const items = d.data && d.data.items;
+    if (!items) throw new Error("no items");
+    ITEMS.forEach(it => { if (items[it.id]) fromJson(it.id, items[it.id], null, it); });
+  }
+
   async function loadPrices() {
     state.className = "live"; state.textContent = "Loading prices from tarkov.dev …";
     try {
-      const ids = JSON.stringify(ITEMS.map(i => i.id));
-      const d = await gql("{ items(ids: " + ids + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
-      const byId = {}; d.items.forEach(x => byId[x.id] = x);
-      ITEMS.forEach(it => { if (byId[it.id]) fromApi(byId[it.id], it); });
+      try {
+        const ids = JSON.stringify(ITEMS.map(i => i.id));
+        const d = await gql("{ items(ids: " + ids + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
+        const byId = {}; d.items.forEach(x => byId[x.id] = x);
+        ITEMS.forEach(it => { if (byId[it.id]) fromApi(byId[it.id], it); });
+      } catch (apiError) {
+        console.warn("tarkov.dev API:", apiError, "- using json.tarkov.dev");
+        await loadFromJson();   // the API is busy: the static price files
+      }
       state.className = "live ok"; state.textContent = "● Live " + (S.mode === "pve" ? "PvE" : "PvP") + " prices from tarkov.dev";
       buildStash();
     } catch (e) {
@@ -721,8 +756,18 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     if (v.length < 3) { sugg.hidden = true; return; }
     tmr = setTimeout(async () => {
       try {
-        const d = await gql("{ items(name: " + JSON.stringify(v) + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
-        results = d.items.slice(0, 8).map(x => fromApi(x));
+        try {
+          const d = await gql("{ items(name: " + JSON.stringify(v) + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
+          results = d.items.slice(0, 8).map(x => fromApi(x));
+        } catch (apiError) {
+          // reserve: search the names in the static files
+          const [d, n] = await Promise.all([jsonFile("items"), jsonFile("items_en")]);
+          const items = d.data.items, names = n.data, words = v.toLowerCase().split(/\s+/);
+          results = Object.keys(items).filter(id => {
+            const nm = ((names[id + " Name"] || "") + " " + (names[id + " ShortName"] || "")).toLowerCase();
+            return nm.trim() && words.every(w => nm.includes(w));
+          }).slice(0, 8).map(id => fromJson(id, items[id], names));
+        }
         sugg.innerHTML = results.length ? results.map((r, k) => '<button data-k="' + k + '"><img src="' + r.img + '" alt="">' + esc(r.name) +
           '<span class="p">' + (r.low ? money(r.low) : "") + "</span></button>").join("") : '<button disabled>Nothing found</button>';
       } catch (e) {
