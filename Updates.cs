@@ -59,7 +59,7 @@ static class Updates
             string tag = doc.RootElement.TryGetProperty("tag_name", out var t) ? t.GetString() ?? "" : "";
             string url = doc.RootElement.TryGetProperty("html_url", out var u) ? u.GetString() ?? "" : "";
             if (url.Length == 0) url = $"https://github.com/{Repo}/releases/latest";
-            // TarkovAppraiser.exe (the small build, needs .NET 8);
+            // TarkovAppraiser.exe (the small build, needs .NET 10);
             // older releases also had TarkovAppraiser-small.exe - taken when there is no TarkovAppraiser.exe
             string? download = null, small = null;
             if (doc.RootElement.TryGetProperty("assets", out var assets) && assets.ValueKind == JsonValueKind.Array)

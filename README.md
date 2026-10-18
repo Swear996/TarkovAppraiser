@@ -5,7 +5,7 @@
 <p align="center">
   <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/Swear996/TarkovAppraiser?label=download&color=5b8cff" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-5b8cff" alt="Windows 10 | 11">
-  <img src="https://img.shields.io/badge/.NET-8-5b8cff" alt=".NET 8">
+  <img src="https://img.shields.io/badge/.NET-10-5b8cff" alt=".NET 10">
   <a href="https://tarkov.dev"><img src="https://img.shields.io/badge/prices-tarkov.dev-5b8cff" alt="Prices from tarkov.dev"></a>
 </p>
 
@@ -32,7 +32,7 @@ Press **F8**, or switch on the **automatic mode** and you don't even need a key.
 | | |
 |---|---|
 | **Windows** | Windows 10 (version 2004 or newer) or Windows 11, 64-bit |
-| **.NET 8** | The [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (or the .NET 8 SDK, which includes it). Without it, Windows offers the download when you start the program. |
+| **.NET 10** | The [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (or the .NET 10 SDK, which includes it). Without it, Windows offers the download when you start the program. |
 | **Text recognition** | The Windows text recognition for your game language (*Windows Settings › Time & Language › Language*). It is usually already there for your Windows language – the welcome window checks it for you. |
 | **Game mode** | Tarkov in *Borderless* or *Windowed* mode (not exclusive fullscreen) |
 | **Internet** | For the prices from tarkov.dev (saved prices are used when it is offline) |
@@ -153,9 +153,9 @@ reads the item name with the text recognition built into Windows and looks up th
 
 ## Building from source
 
-Needs the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+Needs the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-- `build.bat` – builds `dist\TarkovAppraiser.exe` (small version, needs .NET 8) and starts it;
+- `build.bat` – builds `dist\TarkovAppraiser.exe` (small version, needs .NET 10) and starts it;
   set `SELF_CONTAINED=true` in it for a big version that runs without .NET installed
 - `test.bat` – checks the number recognition (stack counts, durability, key uses) against pictures from the
   game, and the item recognition against recorded tooltips (start the app once first, so the price list is saved)

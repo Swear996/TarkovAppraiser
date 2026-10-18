@@ -13,7 +13,7 @@ rem ---------------------------------------------------------
 
 where dotnet >nul 2>nul
 if errorlevel 1 (
-    echo .NET 8 SDK was not found.
+    echo .NET 10 SDK was not found.
     goto end
 )
 

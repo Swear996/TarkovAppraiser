@@ -10,10 +10,14 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.6";
+    public const string Current = "1.7";
 
     public static readonly ChangelogEntry[] Entries =
     {
+        new("1.7", "2026-10-18", new[]
+        {
+            "Now runs on .NET 10 (support for .NET 8 ends in November 2026). Please install the .NET 10 Desktop Runtime if Windows asks for it: dotnet.microsoft.com/download/dotnet/10.0"
+        }),
         new("1.6", "2026-10-18", new[]
         {
             "New update popup at startup: \"New Update Available\" with \"Download Now\" or \"Skip\" - Download Now installs it and restarts, your settings stay.",

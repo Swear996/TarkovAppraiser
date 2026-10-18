@@ -11,7 +11,7 @@
    git push origin v1.1
    ```
 
-GitHub Actions builds `TarkovAppraiser.exe` (small, needs .NET 8) and publishes the release
+GitHub Actions builds `TarkovAppraiser.exe` (small, needs .NET 10) and publishes the release
 (`.github/workflows/release.yml`). The release notes are made from the changelog entry, plus a short
 "How to use" (F8, automatic mode, Shift+F8) and the SHA-256 checksums. The build stops if the tag,
 `Changelog.Current` and `<Version>` do not match. The update check in the app finds the new release by itself.

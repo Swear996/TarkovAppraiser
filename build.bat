@@ -4,7 +4,7 @@ cd /d "%~dp0"
 
 rem ---------------------------------------------------------
 rem  Tarkov Appraiser - build script
-rem  false = small .exe, needs the .NET 8 Desktop Runtime (standard)
+rem  false = small .exe, needs the .NET 10 Desktop Runtime (standard)
 rem  true  = big .exe with .NET included, runs without anything installed
 rem ---------------------------------------------------------
 set SELF_CONTAINED=false
@@ -12,7 +12,7 @@ set SELF_CONTAINED=false
 where dotnet >nul 2>nul
 if errorlevel 1 goto nosdk
 
-dotnet --list-sdks | findstr /b "8." >nul
+dotnet --list-sdks | findstr /b "10." >nul
 if errorlevel 1 goto nosdk
 
 rem Close the running program so the .exe can be replaced
@@ -40,9 +40,9 @@ start "" "%~dp0dist\TarkovAppraiser.exe"
 goto :eof
 
 :nosdk
-echo .NET 8 SDK was not found.
-echo Please install it: https://dotnet.microsoft.com/download/dotnet/8.0
-start https://dotnet.microsoft.com/download/dotnet/8.0
+echo .NET 10 SDK was not found.
+echo Please install it: https://dotnet.microsoft.com/download/dotnet/10.0
+start https://dotnet.microsoft.com/download/dotnet/10.0
 goto end
 
 :failed

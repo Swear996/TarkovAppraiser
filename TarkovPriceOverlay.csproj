@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <!-- WFO1000: designer serialization hints for control properties - the controls are built in code, not in the designer -->
+    <NoWarn>$(NoWarn);WFO1000</NoWarn>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,7 +12,7 @@
     <Product>Tarkov Appraiser</Product>
     <AssemblyTitle>Tarkov Appraiser</AssemblyTitle>
     <ApplicationIcon>Assets\TarkovAppraiser.ico</ApplicationIcon>
-    <Version>1.6.0</Version>
+    <Version>1.7.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
