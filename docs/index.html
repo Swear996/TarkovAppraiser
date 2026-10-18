@@ -80,6 +80,7 @@ img{max-width:100%;height:auto}
 .hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center}
 h1{font-size:clamp(34px,5vw,54px);line-height:1.1;margin:0 0 18px;letter-spacing:-.5px}
 h1 span{color:var(--accent)}
+h1 [data-t]{color:inherit}
 .lead{font-size:19px;color:var(--muted);margin:0 0 28px}
 .btns{display:flex;gap:12px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:10px;font-weight:700;font-size:16px}
@@ -153,6 +154,13 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 @media (prefers-reduced-motion:reduce){.card .inner{transition:none}}
 
 [hidden]{display:none!important}
+.lang{display:flex;gap:4px;margin-left:18px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px}
+.nav .links + .lang{margin-left:18px}
+.lang button{display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font:700 13px inherit;padding:5px 9px;border-radius:6px;cursor:pointer}
+.lang button svg{border-radius:2px;box-shadow:0 0 0 1px #ffffff22}
+.lang button.on{background:var(--panel2);color:var(--text)}
+@media (max-width:900px){.lang{margin-left:auto}}
+
 /* ---------- try it: stash + settings + price box ---------- */
 .live{display:inline-block;margin-left:6px;font-size:13px;padding:2px 10px;border-radius:999px;background:var(--panel2);color:var(--muted)}
 .live.ok{color:var(--green);background:#5fbf6a1f}.live.off{color:var(--warn);background:#e0a5261a}
@@ -189,8 +197,8 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
 .sw{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;user-select:none;line-height:1.25}
 .sw input{position:absolute;opacity:0;pointer-events:none}
-.sw span{flex:none;width:32px;height:18px;border-radius:9px;background:#3a404c;position:relative;transition:background .2s}
-.sw span::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s}
+.sw input+span{flex:none;width:32px;height:18px;border-radius:9px;background:#3a404c;position:relative;transition:background .2s}
+.sw input+span::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s}
 .sw input:checked+span{background:var(--accent)}
 .sw input:checked+span::after{left:17px}
 .sw input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
@@ -268,9 +276,13 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   <div class="wrap">
     <a class="brand" href="#"><img src="logo.png" alt="">Tarkov Appraiser</a>
     <nav class="links">
-      <a href="#features">Features</a><a href="#try">Try it</a><a href="#requirements">Requirements</a>
+      <a href="#features"><span data-t="t0">Features</span></a><a href="#try"><span data-t="t1">Try it</span></a><a href="#requirements"><span data-t="t2">Requirements</span></a>
       <a href="#faq">FAQ</a><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a>
     </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="de" aria-label="Deutsch"><svg viewBox="0 0 5 3" width="20" height="12" aria-hidden="true"><rect width="5" height="1" fill="#000"/><rect y="1" width="5" height="1" fill="#dd0000"/><rect y="2" width="5" height="1" fill="#ffce00"/></svg>DE</button>
+      <button data-lang="en" aria-label="English"><svg viewBox="0 0 19 10" width="20" height="12" aria-hidden="true"><rect width="19" height="10" fill="#b22234"/><g fill="#fff"><rect y="0.77" width="19" height="0.77"/><rect y="2.31" width="19" height="0.77"/><rect y="3.85" width="19" height="0.77"/><rect y="5.38" width="19" height="0.77"/><rect y="6.92" width="19" height="0.77"/><rect y="8.46" width="19" height="0.77"/></g><rect width="7.6" height="5.38" fill="#3c3b6e"/><g fill="#fff"><circle cx="1.3" cy="1.1" r=".3"/><circle cx="3.2" cy="1.1" r=".3"/><circle cx="5.1" cy="1.1" r=".3"/><circle cx="2.25" cy="2.2" r=".3"/><circle cx="4.15" cy="2.2" r=".3"/><circle cx="6.05" cy="2.2" r=".3"/><circle cx="1.3" cy="3.3" r=".3"/><circle cx="3.2" cy="3.3" r=".3"/><circle cx="5.1" cy="3.3" r=".3"/><circle cx="2.25" cy="4.4" r=".3"/><circle cx="4.15" cy="4.4" r=".3"/><circle cx="6.05" cy="4.4" r=".3"/></g></svg>EN</button>
+    </div>
   </div>
 </header>
 
@@ -278,14 +290,14 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 <div class="hero">
   <div class="wrap">
     <div>
-      <h1>The free <span>Escape from Tarkov</span> price checker</h1>
-      <p class="lead">Hover an item and see what it is worth – flea market, traders, barters and crafts – right next to the mouse.
-        Press <kbd>F8</kbd> or just let the mouse rest on an item.</p>
+      <h1><span data-t="t3">The free <span>Escape from Tarkov</span> price checker</span></h1>
+      <p class="lead"><span data-t="t4">Hover an item and see what it is worth – flea market, traders, barters and crafts – right next to the mouse.
+        Press <kbd>F8</kbd> or just let the mouse rest on an item.</span></p>
       <div class="btns">
-        <a class="btn primary" href="https://github.com/Swear996/TarkovAppraiser/releases/latest">⬇ Download for Windows</a>
-        <a class="btn ghost" href="#try">Try it in the browser</a>
+        <a class="btn primary" href="https://github.com/Swear996/TarkovAppraiser/releases/latest"><span data-t="t5">⬇ Download for Windows</span></a>
+        <a class="btn ghost" href="#try"><span data-t="t6">Try it in the browser</span></a>
       </div>
-      <p class="small">Free &amp; open source · Windows 10 / 11 · Prices from tarkov.dev · No memory reading</p>
+      <p class="small"><span data-t="t7">Free &amp; open source · Windows 10 / 11 · Prices from tarkov.dev · No memory reading</span></p>
     </div>
     <div class="showcase">
       <div class="heroBox" id="card" aria-live="polite" aria-label="Example price box"></div>
@@ -296,26 +308,26 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 
 <section id="features">
   <div class="wrap">
-    <h2>Features</h2>
-    <p class="sub">Everything you need to decide in a second: keep it, sell it, or trade it in.</p>
+    <h2><span data-t="t8">Features</span></h2>
+    <p class="sub"><span data-t="t9">Everything you need to decide in a second: keep it, sell it, or trade it in.</span></p>
     <div class="grid">
-      <div class="f"><div class="ic">₽</div><h3>Flea market &amp; traders</h3><p>Lowest flea price, 24h average, what you get after the fee, and the best trader with portrait.</p></div>
-      <div class="f"><div class="ic">⇄</div><h3>Best way to sell</h3><p>Flea, trader – or a barter / craft when trading it in brings clearly more. The recommendation tells you where and how much more.</p></div>
-      <div class="f"><div class="ic">◆</div><h3>Loot tiers</h3><p>Prices colored from junk to legendary, valuable loot framed in its tier color, junk dimmed. Ammo ranked by penetration.</p></div>
-      <div class="f"><div class="ic">▦</div><h3>Read from the game</h3><p>Stack counts (e.g. 18 rounds), the real armor durability (179/190) and key uses (37/40) – read from the cell.</p></div>
-      <div class="f"><div class="ic">⚡</div><h3>Hotkey or automatic</h3><p>Press <kbd>F8</kbd>, or switch on the automatic mode and just rest the mouse on an item while looting.</p></div>
-      <div class="f"><div class="ic">◫</div><h3>Your layout</h3><p>Arrange the price box by drag &amp; drop in a live preview. Compact mode, themes and colors – <a href="#try">try it above</a>.</p></div>
-      <div class="f"><div class="ic">↺</div><h3>History &amp; raid total</h3><p>The last 20 items, also as a movable in-game list (<kbd>Alt</kbd>+<kbd>F8</kbd>), plus the value of this raid.</p></div>
-      <div class="f"><div class="ic">▤</div><h3>Statistics</h3><p>Value checked over all raids, your best raid, most valuable finds and most checked items.</p></div>
-      <div class="f"><div class="ic">⟳</div><h3>One-click updates</h3><p>At startup a popup offers a new version – “Download Now” installs it and restarts. PvP and PvE prices, many languages, English and German interface.</p></div>
+      <div class="f"><div class="ic">₽</div><h3><span data-t="t10">Flea market &amp; traders</span></h3><p><span data-t="t11">Lowest flea price, 24h average, what you get after the fee, and the best trader with portrait.</span></p></div>
+      <div class="f"><div class="ic">⇄</div><h3><span data-t="t12">Best way to sell</span></h3><p><span data-t="t13">Flea, trader – or a barter / craft when trading it in brings clearly more. The recommendation tells you where and how much more.</span></p></div>
+      <div class="f"><div class="ic">◆</div><h3><span data-t="t14">Loot tiers</span></h3><p><span data-t="t15">Prices colored from junk to legendary, valuable loot framed in its tier color, junk dimmed. Ammo ranked by penetration.</span></p></div>
+      <div class="f"><div class="ic">▦</div><h3><span data-t="t16">Read from the game</span></h3><p><span data-t="t17">Stack counts (e.g. 18 rounds), the real armor durability (179/190) and key uses (37/40) – read from the cell.</span></p></div>
+      <div class="f"><div class="ic">⚡</div><h3><span data-t="t18">Hotkey or automatic</span></h3><p><span data-t="t19">Press <kbd>F8</kbd>, or switch on the automatic mode and just rest the mouse on an item while looting.</span></p></div>
+      <div class="f"><div class="ic">◫</div><h3><span data-t="t20">Your layout</span></h3><p><span data-t="t21">Arrange the price box by drag &amp; drop in a live preview. Compact mode, themes and colors – <a href="#try">try it above</a>.</span></p></div>
+      <div class="f"><div class="ic">↺</div><h3><span data-t="t22">History &amp; raid total</span></h3><p><span data-t="t23">The last 20 items, also as a movable in-game list (<kbd>Alt</kbd>+<kbd>F8</kbd>), plus the value of this raid.</span></p></div>
+      <div class="f"><div class="ic">▤</div><h3><span data-t="t24">Statistics</span></h3><p><span data-t="t25">Value checked over all raids, your best raid, most valuable finds and most checked items.</span></p></div>
+      <div class="f"><div class="ic">⟳</div><h3><span data-t="t26">One-click updates</span></h3><p><span data-t="t27">At startup a popup offers a new version – “Download Now” installs it and restarts. PvP and PvE prices, many languages, English and German interface.</span></p></div>
     </div>
   </div>
 </section>
 
 <section id="try">
   <div class="wrap">
-    <h2>Try it right here</h2>
-    <p class="sub">Hover the items like in your stash – the price box appears next to the mouse. Change the settings on the right and watch it update live.
+    <h2><span data-t="t28">Try it right here</span></h2>
+    <p class="sub"><span data-t="t29">Hover the items like in your stash – the price box appears next to the mouse. Change the settings on the right and watch it update live.</span>
       <span class="live" id="liveState">Loading prices from tarkov.dev …</span></p>
     <div class="try">
       <div class="stashcol">
@@ -323,54 +335,54 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
           <input id="q" type="search" placeholder="Search any item, e.g. LEDX, Salewa, M995 …" autocomplete="off" aria-label="Search an item">
           <div class="sugg" id="sugg" hidden></div>
         </div>
-        <div class="stashhead"><span>STASH</span><span class="hint">hover an item · tap on a phone</span></div>
+        <div class="stashhead"><span><span data-t="t30">STASH</span></span><span class="hint"><span data-t="t31">hover an item · tap on a phone</span></span></div>
         <div class="stash" id="stash" aria-label="Demo stash"></div>
         <div class="pinned" id="pinned" hidden></div>
-        <p class="note">Demo in your browser with live tarkov.dev prices. The real program reads the item under your mouse in the game,
-          including stack counts, armor durability and key uses, and adds barter &amp; craft tips.</p>
+        <p class="note"><span data-t="t32">Demo in your browser with live tarkov.dev prices. The real program reads the item under your mouse in the game,
+          including stack counts, armor durability and key uses, and adds barter &amp; craft tips.</span></p>
       </div>
       <div class="panel" aria-label="Demo settings">
         <div class="ptabs" role="tablist">
-          <button class="on" data-tab="overlay">Overlay</button><button data-tab="tiers">Loot Tiers</button><button data-tab="look">Appearance</button>
+          <button class="on" data-tab="overlay"><span data-t="t33">Overlay</span></button><button data-tab="tiers"><span data-t="t34">Loot Tiers</span></button><button data-tab="look"><span data-t="t35">Appearance</span></button>
         </div>
         <div class="ppage" data-page="overlay">
-          <label class="sw"><input type="checkbox" data-set="compact"><span></span>Compact – name and best price only</label>
+          <label class="sw"><input type="checkbox" data-set="compact"><span></span><span data-t="t36">Compact – name and best price only</span></label>
           <div class="pgrid">
-            <label class="sw"><input type="checkbox" data-set="flea" checked><span></span>Lowest flea price</label>
-            <label class="sw"><input type="checkbox" data-set="net" checked><span></span>After the flea fee</label>
-            <label class="sw"><input type="checkbox" data-set="avg" checked><span></span>24h average</label>
-            <label class="sw"><input type="checkbox" data-set="trader" checked><span></span>Best trader</label>
-            <label class="sw"><input type="checkbox" data-set="allTraders"><span></span>All traders</label>
-            <label class="sw"><input type="checkbox" data-set="perSlot" checked><span></span>Price per slot</label>
-            <label class="sw"><input type="checkbox" data-set="best" checked><span></span>Where to sell</label>
-            <label class="sw"><input type="checkbox" data-set="picture" checked><span></span>Item picture</label>
-            <label class="sw"><input type="checkbox" data-set="portraits" checked><span></span>Trader portraits</label>
-            <label class="sw"><input type="checkbox" data-set="ammo" checked><span></span>Ammo values</label>
-            <label class="sw"><input type="checkbox" data-set="keys" checked><span></span>Key info</label>
-            <label class="sw"><input type="checkbox" data-set="intel"><span></span>Intel Center 3 (−30 % fee)</label>
+            <label class="sw"><input type="checkbox" data-set="flea" checked><span></span><span data-t="t37">Lowest flea price</span></label>
+            <label class="sw"><input type="checkbox" data-set="net" checked><span></span><span data-t="t38">After the flea fee</span></label>
+            <label class="sw"><input type="checkbox" data-set="avg" checked><span></span><span data-t="t39">24h average</span></label>
+            <label class="sw"><input type="checkbox" data-set="trader" checked><span></span><span data-t="t40">Best trader</span></label>
+            <label class="sw"><input type="checkbox" data-set="allTraders"><span></span><span data-t="t41">All traders</span></label>
+            <label class="sw"><input type="checkbox" data-set="perSlot" checked><span></span><span data-t="t42">Price per slot</span></label>
+            <label class="sw"><input type="checkbox" data-set="best" checked><span></span><span data-t="t43">Where to sell</span></label>
+            <label class="sw"><input type="checkbox" data-set="picture" checked><span></span><span data-t="t44">Item picture</span></label>
+            <label class="sw"><input type="checkbox" data-set="portraits" checked><span></span><span data-t="t45">Trader portraits</span></label>
+            <label class="sw"><input type="checkbox" data-set="ammo" checked><span></span><span data-t="t46">Ammo values</span></label>
+            <label class="sw"><input type="checkbox" data-set="keys" checked><span></span><span data-t="t47">Key info</span></label>
+            <label class="sw"><input type="checkbox" data-set="intel"><span></span><span data-t="t48">Intel Center 3 (−30 % fee)</span></label>
           </div>
-          <div class="prow"><span>Picture</span>
-            <div class="seg" data-seg="side"><button class="on" data-v="left">Left</button><button data-v="right">Right</button><button data-v="top">Top</button></div></div>
+          <div class="prow"><span><span data-t="t49">Picture</span></span>
+            <div class="seg" data-seg="side"><button class="on" data-v="left"><span data-t="t50">Left</span></button><button data-v="right"><span data-t="t51">Right</span></button><button data-v="top"><span data-t="t52">Top</span></button></div></div>
         </div>
         <div class="ppage" data-page="tiers" hidden>
-          <label class="sw"><input type="checkbox" data-set="tiers" checked><span></span>Color prices by tier</label>
-          <label class="sw"><input type="checkbox" data-set="tierName" checked><span></span>Color the item name</label>
-          <label class="sw"><input type="checkbox" data-set="tierLabel" checked><span></span>Show the tier name</label>
-          <label class="sw"><input type="checkbox" data-set="frame" checked><span></span>Frame in the tier color</label>
-          <label class="sw"><input type="checkbox" data-set="dimJunk" checked><span></span>Dim junk</label>
-          <label class="sw"><input type="checkbox" data-set="ammoTier" checked><span></span>Ammo: tier by penetration</label>
-          <div class="prow"><span>Tiers based on</span>
-            <div class="seg" data-seg="basis"><button class="on" data-v="slot">Per slot</button><button data-v="total">Total</button></div></div>
+          <label class="sw"><input type="checkbox" data-set="tiers" checked><span></span><span data-t="t53">Color prices by tier</span></label>
+          <label class="sw"><input type="checkbox" data-set="tierName" checked><span></span><span data-t="t54">Color the item name</span></label>
+          <label class="sw"><input type="checkbox" data-set="tierLabel" checked><span></span><span data-t="t55">Show the tier name</span></label>
+          <label class="sw"><input type="checkbox" data-set="frame" checked><span></span><span data-t="t56">Frame in the tier color</span></label>
+          <label class="sw"><input type="checkbox" data-set="dimJunk" checked><span></span><span data-t="t57">Dim junk</span></label>
+          <label class="sw"><input type="checkbox" data-set="ammoTier" checked><span></span><span data-t="t58">Ammo: tier by penetration</span></label>
+          <div class="prow"><span><span data-t="t59">Tiers based on</span></span>
+            <div class="seg" data-seg="basis"><button class="on" data-v="slot"><span data-t="t60">Per slot</span></button><button data-v="total"><span data-t="t61">Total</span></button></div></div>
           <div class="tierlist" id="tierlist"></div>
         </div>
         <div class="ppage" data-page="look" hidden>
-          <div class="prow"><span>Accent color</span><div class="swatches" id="swatches"></div></div>
-          <div class="prow"><span>Size</span><input type="range" min="80" max="130" value="100" data-range="size" aria-label="Size"><b id="sizeV">100 %</b></div>
-          <div class="prow"><span>Opacity</span><input type="range" min="60" max="100" value="100" data-range="opacity" aria-label="Opacity"><b id="opV">100 %</b></div>
-          <div class="prow"><span>Mode</span>
+          <div class="prow"><span><span data-t="t62">Accent color</span></span><div class="swatches" id="swatches"></div></div>
+          <div class="prow"><span><span data-t="t63">Size</span></span><input type="range" min="80" max="130" value="100" data-range="size" aria-label="Size"><b id="sizeV">100 %</b></div>
+          <div class="prow"><span><span data-t="t64">Opacity</span></span><input type="range" min="60" max="100" value="100" data-range="opacity" aria-label="Opacity"><b id="opV">100 %</b></div>
+          <div class="prow"><span><span data-t="t65">Mode</span></span>
             <div class="seg" data-seg="mode"><button class="on" data-v="pvp">PvP</button><button data-v="pve">PvE</button></div></div>
         </div>
-        <div class="preview"><span class="ptitle">Live preview</span><div id="preview"></div></div>
+        <div class="preview"><span class="ptitle"><span data-t="t66">Live preview</span></span><div id="preview"></div></div>
       </div>
     </div>
     <div class="pop" id="pop" hidden></div>
@@ -379,26 +391,26 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 
 <section id="requirements">
   <div class="wrap">
-    <h2>Requirements</h2>
-    <p class="sub">Small download, no setup – it only needs .NET 8.</p>
+    <h2><span data-t="t67">Requirements</span></h2>
+    <p class="sub"><span data-t="t68">Small download, no setup – it only needs .NET 8.</span></p>
     <table>
-      <tr><td>Windows</td><td>Windows 10 (version 2004 or newer) or Windows 11, 64-bit</td></tr>
-      <tr><td>.NET 8</td><td>The <a href="https://dotnet.microsoft.com/download/dotnet/8.0">.NET 8 Desktop Runtime</a> (or the .NET 8 SDK). Without it, Windows offers the download when you start the program.</td></tr>
-      <tr><td>Text recognition</td><td>The Windows text recognition for your game language – usually already installed; the welcome window checks it for you.</td></tr>
-      <tr><td>Game mode</td><td>Escape from Tarkov in <em>Borderless</em> or <em>Windowed</em> mode</td></tr>
-      <tr><td>Internet</td><td>For the prices from tarkov.dev (saved prices are used when offline)</td></tr>
+      <tr><td>Windows</td><td><span data-t="t69">Windows 10 (version 2004 or newer) or Windows 11, 64-bit</span></td></tr>
+      <tr><td>.NET 8</td><td><span data-t="t70">The <a href="https://dotnet.microsoft.com/download/dotnet/8.0">.NET 8 Desktop Runtime</a> (or the .NET 8 SDK). Without it, Windows offers the download when you start the program.</span></td></tr>
+      <tr><td><span data-t="t71">Text recognition</span></td><td><span data-t="t72">The Windows text recognition for your game language – usually already installed; the welcome window checks it for you.</span></td></tr>
+      <tr><td><span data-t="t73">Game mode</span></td><td><span data-t="t74">Escape from Tarkov in <em>Borderless</em> or <em>Windowed</em> mode</span></td></tr>
+      <tr><td>Internet</td><td><span data-t="t75">For the prices from tarkov.dev (saved prices are used when offline)</span></td></tr>
     </table>
   </div>
 </section>
 
 <section id="start">
   <div class="wrap">
-    <h2>Get started in a minute</h2>
-    <p class="sub">Download, start, hover.</p>
+    <h2><span data-t="t76">Get started in a minute</span></h2>
+    <p class="sub"><span data-t="t77">Download, start, hover.</span></p>
     <div class="steps">
-      <div class="step"><p><b>Download</b> <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">TarkovAppraiser.exe</a> from the latest release. Windows may warn about an unknown app: <em>More info › Run anyway</em>.</p></div>
-      <div class="step"><p><b>Start it.</b> The welcome window walks you through the setup, then it waits in the tray next to the clock.</p></div>
-      <div class="step"><p><b>In Tarkov:</b> hover an item and press <kbd>F8</kbd> – or switch on the automatic mode and just hover.</p></div>
+      <div class="step"><p><span data-t="t78"><b>Download</b> <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">TarkovAppraiser.exe</a> from the latest release. Windows may warn about an unknown app: <em>More info › Run anyway</em>.</span></p></div>
+      <div class="step"><p><span data-t="t79"><b>Start it.</b> The welcome window walks you through the setup, then it waits in the tray next to the clock.</span></p></div>
+      <div class="step"><p><span data-t="t80"><b>In Tarkov:</b> hover an item and press <kbd>F8</kbd> – or switch on the automatic mode and just hover.</span></p></div>
     </div>
   </div>
 </section>
@@ -406,37 +418,37 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 <section id="faq">
   <div class="wrap">
     <h2>FAQ</h2>
-    <p class="sub">Short answers to common questions.</p>
-    <details><summary>Can I try it before downloading?</summary><p>Yes – the <a href="#try">demo above</a> uses live tarkov.dev prices: hover the items, search any item and change the settings.</p></details>
-    <details><summary>Is Tarkov Appraiser free?</summary><p>Yes – free and open source on GitHub.</p></details>
-    <details><summary>Does it read the game's memory?</summary><p>No. It only takes a screenshot around the mouse and reads the item name with the text recognition built into Windows. It never reads or changes game memory or files and never sends input to the game.</p></details>
-    <details><summary>Where do the prices come from?</summary><p>From <a href="https://tarkov.dev">tarkov.dev</a>, updated regularly. PvP and PvE prices are supported.</p></details>
-    <details><summary>The price box does not appear.</summary><p>Run Tarkov in Borderless or Windowed mode and make sure the item's tooltip is visible. In automatic mode, check that it is on and not paused (Ctrl+F8).</p></details>
-    <details><summary>It shows the wrong item.</summary><p>Check Settings › Detection › Language – it has to match the game language.</p></details>
-    <details><summary>Can I get banned for using it?</summary><p>It does not touch the game, but Battlestate Games decides which third-party programs it tolerates. Nobody can guarantee that using it never leads to a restriction or ban – see the risk notice below.</p></details>
+    <p class="sub"><span data-t="t81">Short answers to common questions.</span></p>
+    <details><summary><span data-t="t82">Can I try it before downloading?</span></summary><p><span data-t="t83">Yes – the <a href="#try">demo above</a> uses live tarkov.dev prices: hover the items, search any item and change the settings.</span></p></details>
+    <details><summary><span data-t="t84">Is Tarkov Appraiser free?</span></summary><p><span data-t="t85">Yes – free and open source on GitHub.</span></p></details>
+    <details><summary><span data-t="t86">Does it read the game's memory?</span></summary><p><span data-t="t87">No. It only takes a screenshot around the mouse and reads the item name with the text recognition built into Windows. It never reads or changes game memory or files and never sends input to the game.</span></p></details>
+    <details><summary><span data-t="t88">Where do the prices come from?</span></summary><p><span data-t="t89">From <a href="https://tarkov.dev">tarkov.dev</a>, updated regularly. PvP and PvE prices are supported.</span></p></details>
+    <details><summary><span data-t="t90">The price box does not appear.</span></summary><p><span data-t="t91">Run Tarkov in Borderless or Windowed mode and make sure the item's tooltip is visible. In automatic mode, check that it is on and not paused (Ctrl+F8).</span></p></details>
+    <details><summary><span data-t="t92">It shows the wrong item.</span></summary><p><span data-t="t93">Check Settings › Detection › Language – it has to match the game language.</span></p></details>
+    <details><summary><span data-t="t94">Can I get banned for using it?</span></summary><p><span data-t="t95">It does not touch the game, but Battlestate Games decides which third-party programs it tolerates. Nobody can guarantee that using it never leads to a restriction or ban – see the risk notice below.</span></p></details>
   </div>
 </section>
 
 <section id="legal">
   <div class="wrap">
     <div class="warn">
-      <h3>⚠ Risk of use</h3>
-      Use Tarkov Appraiser at your own risk. Escape from Tarkov is protected by an anti-cheat system, and Battlestate Games
+      <h3><span data-t="t96">⚠ Risk of use</span></h3>
+      <span data-t="t97">Use Tarkov Appraiser at your own risk. Escape from Tarkov is protected by an anti-cheat system, and Battlestate Games
       decides on its own which third-party programs it tolerates. Tarkov Appraiser only reads the screen and never touches the game,
-      but nobody can guarantee that using it will never lead to a warning, restriction or ban of your account.
+      but nobody can guarantee that using it will never lead to a warning, restriction or ban of your account.</span>
       <ul>
-        <li>Read the game's EULA / terms of use yourself and decide whether you want to use such a tool.</li>
-        <li>The authors accept no liability for account restrictions, bans, lost items, wrong prices or any other damage.</li>
-        <li>Prices come from a third party (tarkov.dev) and can be outdated or wrong – check before big trades.</li>
+        <li><span data-t="t98">Read the game's EULA / terms of use yourself and decide whether you want to use such a tool.</span></li>
+        <li><span data-t="t99">The authors accept no liability for account restrictions, bans, lost items, wrong prices or any other damage.</span></li>
+        <li><span data-t="t100">Prices come from a third party (tarkov.dev) and can be outdated or wrong – check before big trades.</span></li>
       </ul>
     </div>
     <div class="legal">
-      <h3>Legal notice</h3>
+      <h3><span data-t="t101">Legal notice</span></h3>
       <ul>
-        <li>Tarkov Appraiser is an independent fan project. It is not affiliated with, endorsed or sponsored by Battlestate Games Limited.</li>
-        <li>Escape from Tarkov and all related names, logos and item pictures are trademarks or property of Battlestate Games Limited.</li>
-        <li>Price and item data are provided by <a href="https://tarkov.dev">tarkov.dev</a> and remain the property of their respective owners.</li>
-        <li>The software is provided "as is", without warranty of any kind.</li>
+        <li><span data-t="t102">Tarkov Appraiser is an independent fan project. It is not affiliated with, endorsed or sponsored by Battlestate Games Limited.</span></li>
+        <li><span data-t="t103">Escape from Tarkov and all related names, logos and item pictures are trademarks or property of Battlestate Games Limited.</span></li>
+        <li><span data-t="t104">Price and item data are provided by <a href="https://tarkov.dev">tarkov.dev</a> and remain the property of their respective owners.</span></li>
+        <li><span data-t="t105">The software is provided "as is", without warranty of any kind.</span></li>
       </ul>
     </div>
   </div>
@@ -445,8 +457,8 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 
 <footer>
   <div class="wrap">
-    <span>Tarkov Appraiser – free Escape from Tarkov price checker</span>
-    <span><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a> · <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">Download</a> · <a href="https://github.com/Swear996/TarkovAppraiser/issues">Report a problem</a></span>
+    <span><span data-t="t106">Tarkov Appraiser – free Escape from Tarkov price checker</span></span>
+    <span><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a> · <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">Download</a> · <a href="https://github.com/Swear996/TarkovAppraiser/issues"><span data-t="t107">Report a problem</span></a></span>
   </div>
 </footer>
 
@@ -457,6 +469,30 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 // ------------------------------------------------------------
 (function () {
   "use strict";
+  // ---- language: English / German (button at the top right; remembered in this browser) ----
+  const DE_TEXT = {"t0": "Funktionen", "t1": "Ausprobieren", "t2": "Voraussetzungen", "t3": "Der kostenlose Preis-Checker für <span>Escape from Tarkov</span>", "t4": "Mit der Maus auf ein Item zeigen und sehen, was es wert ist – Flohmarkt, Händler, Tausch und Herstellung – direkt neben der Maus. <kbd>F8</kbd> drücken oder die Maus einfach kurz auf dem Item ruhen lassen.", "t5": "⬇ Download für Windows", "t6": "Im Browser ausprobieren", "t7": "Kostenlos &amp; Open Source · Windows 10 / 11 · Preise von tarkov.dev · Kein Speicherzugriff", "t8": "Funktionen", "t9": "Alles, um in einer Sekunde zu entscheiden: behalten, verkaufen oder eintauschen.", "t10": "Flohmarkt &amp; Händler", "t11": "Niedrigster Flohmarktpreis, 24h-Durchschnitt, was nach der Gebühr ankommt, und der beste Händler mit Porträt.", "t12": "Bester Verkaufsweg", "t13": "Flohmarkt, Händler – oder Tausch / Herstellung, wenn das deutlich mehr bringt. Die Empfehlung sagt dir, wo und wie viel mehr.", "t14": "Loot-Tiers", "t15": "Preise eingefärbt von Schrott bis Legendär, wertvoller Loot mit Rahmen in der Tier-Farbe, Schrott abgedunkelt. Munition nach Durchschlag eingestuft.", "t16": "Aus dem Spiel gelesen", "t17": "Stack-Anzahl (z. B. 18 Schuss), die echte Rüstungs-Haltbarkeit (179/190) und Schlüssel-Nutzungen (37/40) – direkt aus dem Feld gelesen.", "t18": "Hotkey oder automatisch", "t19": "<kbd>F8</kbd> drücken oder den automatischen Modus einschalten und beim Looten einfach die Maus auf ein Item halten.", "t20": "Dein Layout", "t21": "Die Preis-Box per Drag &amp; Drop in der Live-Vorschau anordnen. Kompaktmodus, Themes und Farben – <a href=\"#try\">oben ausprobieren</a>.", "t22": "Verlauf &amp; Raid-Summe", "t23": "Die letzten 20 Items, auch als verschiebbare Liste im Spiel (<kbd>Alt</kbd>+<kbd>F8</kbd>), dazu der Wert dieses Raids.", "t24": "Statistik", "t25": "Geprüfter Wert über alle Raids, dein bester Raid, die wertvollsten Funde und die meistgeprüften Items.", "t26": "Updates mit einem Klick", "t27": "Beim Start bietet ein Popup neue Versionen an – „Jetzt herunterladen“ installiert sie und startet neu. PvP- und PvE-Preise, viele Sprachen, Oberfläche auf Deutsch und Englisch.", "t28": "Gleich hier ausprobieren", "t29": "Fahr mit der Maus über die Items wie in deinem Stash – die Preis-Box erscheint neben der Maus. Ändere rechts die Einstellungen und sieh live, was passiert.", "t30": "STASH", "t31": "Maus auf ein Item · am Handy antippen", "t32": "Demo im Browser mit Live-Preisen von tarkov.dev. Das echte Programm liest das Item unter deiner Maus im Spiel – samt Stack-Anzahl, Rüstungs-Haltbarkeit und Schlüssel-Nutzungen – und ergänzt Tausch- &amp; Herstellungs-Tipps.", "t33": "Overlay", "t34": "Loot-Tiers", "t35": "Aussehen", "t36": "Kompakt – nur Name und bester Preis", "t37": "Niedrigster Flohmarktpreis", "t38": "Nach der Flohmarkt-Gebühr", "t39": "24h-Durchschnitt", "t40": "Bester Händler", "t41": "Alle Händler", "t42": "Preis pro Feld", "t43": "Wo verkaufen", "t44": "Item-Bild", "t45": "Händler-Porträts", "t46": "Munitionswerte", "t47": "Schlüssel-Info", "t48": "Intel Center 3 (−30 % Gebühr)", "t49": "Bild", "t50": "Links", "t51": "Rechts", "t52": "Oben", "t53": "Preise nach Tier einfärben", "t54": "Item-Namen einfärben", "t55": "Tier-Namen anzeigen", "t56": "Rahmen in der Tier-Farbe", "t57": "Schrott abdunkeln", "t58": "Munition: Tier nach Durchschlag", "t59": "Tiers nach", "t60": "Pro Feld", "t61": "Gesamt", "t62": "Akzentfarbe", "t63": "Größe", "t64": "Deckkraft", "t65": "Modus", "t66": "Live-Vorschau", "t67": "Voraussetzungen", "t68": "Kleiner Download, keine Installation – es braucht nur .NET 8.", "t69": "Windows 10 (Version 2004 oder neuer) oder Windows 11, 64-Bit", "t70": "Die <a href=\"https://dotnet.microsoft.com/download/dotnet/8.0\">.NET 8 Desktop Runtime</a> (oder das .NET 8 SDK). Fehlt sie, bietet Windows beim Start den Download an.", "t71": "Texterkennung", "t72": "Die Windows-Texterkennung für deine Spielsprache – meist schon installiert; das Willkommensfenster prüft das für dich.", "t73": "Spielmodus", "t74": "Escape from Tarkov im Modus <em>Rahmenlos</em> oder <em>Fenster</em>", "t75": "Für die Preise von tarkov.dev (offline werden gespeicherte Preise genutzt)", "t76": "In einer Minute startklar", "t77": "Herunterladen, starten, Maus drauf.", "t78": "<b>Lade</b> <a href=\"https://github.com/Swear996/TarkovAppraiser/releases/latest\">TarkovAppraiser.exe</a> aus dem neuesten Release herunter. Windows warnt evtl. vor einer unbekannten App: <em>Weitere Informationen › Trotzdem ausführen</em>.", "t79": "<b>Starten.</b> Das Willkommensfenster führt dich durch die Einrichtung, danach wartet es im Tray neben der Uhr.", "t80": "<b>In Tarkov:</b> Maus auf ein Item und <kbd>F8</kbd> drücken – oder den automatischen Modus einschalten und einfach zeigen.", "t81": "Kurze Antworten auf häufige Fragen.", "t82": "Kann ich es vor dem Download ausprobieren?", "t83": "Ja – die <a href=\"#try\">Demo oben</a> nutzt Live-Preise von tarkov.dev: Items anzeigen, beliebige Items suchen und die Einstellungen ändern.", "t84": "Ist Tarkov Appraiser kostenlos?", "t85": "Ja – kostenlos und Open Source auf GitHub.", "t86": "Liest es den Speicher des Spiels?", "t87": "Nein. Es macht nur einen Screenshot rund um die Maus und liest den Item-Namen mit der in Windows eingebauten Texterkennung. Es liest oder ändert nie Speicher oder Dateien des Spiels und sendet keine Eingaben ans Spiel.", "t88": "Woher kommen die Preise?", "t89": "Von <a href=\"https://tarkov.dev\">tarkov.dev</a>, regelmäßig aktualisiert. PvP- und PvE-Preise werden unterstützt.", "t90": "Die Preis-Box erscheint nicht.", "t91": "Tarkov im Modus Rahmenlos oder Fenster starten und darauf achten, dass der Tooltip des Items sichtbar ist. Im automatischen Modus prüfen, ob er an und nicht pausiert ist (Strg+F8).", "t92": "Es zeigt das falsche Item.", "t93": "Einstellungen › Erkennung › Sprache prüfen – sie muss zur Spielsprache passen.", "t94": "Kann ich dafür gebannt werden?", "t95": "Es greift nicht ins Spiel ein, aber Battlestate Games entscheidet selbst, welche Drittprogramme es duldet. Niemand kann garantieren, dass die Nutzung nie zu einer Einschränkung oder einem Bann führt – siehe Risikohinweis unten.", "t96": "⚠ Risiko der Nutzung", "t97": "Die Nutzung von Tarkov Appraiser erfolgt auf eigenes Risiko. Escape from Tarkov ist durch ein Anti-Cheat-System geschützt, und Battlestate Games entscheidet selbst, welche Drittprogramme es duldet. Tarkov Appraiser liest nur den Bildschirm und greift nie ins Spiel ein, aber niemand kann garantieren, dass die Nutzung nie zu einer Verwarnung, Einschränkung oder einem Bann deines Kontos führt.", "t98": "Lies die EULA / Nutzungsbedingungen des Spiels selbst und entscheide, ob du so ein Tool nutzen möchtest.", "t99": "Die Autoren übernehmen keine Haftung für Kontoeinschränkungen, Banns, verlorene Items, falsche Preise oder sonstige Schäden.", "t100": "Die Preise kommen von einem Drittanbieter (tarkov.dev) und können veraltet oder falsch sein – vor großen Geschäften prüfen.", "t101": "Rechtlicher Hinweis", "t102": "Tarkov Appraiser ist ein unabhängiges Fan-Projekt. Es steht in keiner Verbindung zu Battlestate Games Limited und wird von dort weder unterstützt noch gesponsert.", "t103": "Escape from Tarkov und alle zugehörigen Namen, Logos und Item-Bilder sind Marken oder Eigentum von Battlestate Games Limited.", "t104": "Preis- und Item-Daten stammen von <a href=\"https://tarkov.dev\">tarkov.dev</a> und bleiben Eigentum der jeweiligen Inhaber.", "t105": "Die Software wird „wie besehen“ bereitgestellt, ohne jegliche Gewährleistung.", "t106": "Tarkov Appraiser – kostenloser Preis-Checker für Escape from Tarkov", "t107": "Problem melden"};
+  const DE_JS = {"/slot": "/Feld", "Stack": "Stack", "Flea:": "Flohmarkt:", "Not sellable": "Nicht verkaufbar", "Ammo:": "Munition:", "Key:": "Schlüssel:", "unknown map": "unbekannte Karte", "uses": "Nutzungen", "banned": "gesperrt", "no offers": "keine Angebote", "After fee:": "Nach Gebühr:", "fee": "Gebühr", "Avg 24h:": "Ø 24h:", "Trader:": "Händler:", "not sellable": "nicht verkaufbar", "Sell on the flea market": "Auf dem Flohmarkt verkaufen", "Sell to": "Verkaufen an", "Junk": "Schrott", "Common": "Gewöhnlich", "Good": "Gut", "Rare": "Selten", "Legendary": "Legendär", "below": "unter", "from": "ab", "per slot": "pro Feld", "Loading prices from tarkov.dev …": "Lade Preise von tarkov.dev …", "● Live PvE prices from tarkov.dev": "● Live-PvE-Preise von tarkov.dev", "● Live PvP prices from tarkov.dev": "● Live-PvP-Preise von tarkov.dev", "Example prices – live prices from tarkov.dev could not be loaded, trying again …": "Beispielpreise – Live-Preise von tarkov.dev konnten nicht geladen werden, neuer Versuch …", "Example prices – tarkov.dev is busy right now, please reload later": "Beispielpreise – tarkov.dev ist gerade überlastet, bitte später neu laden", "Nothing found": "Nichts gefunden", "Live search needs tarkov.dev – it is busy right now, please try again later": "Die Live-Suche braucht tarkov.dev – es ist gerade überlastet, bitte später erneut versuchen", "Search any item, e.g. LEDX, Salewa, M995 …": "Beliebiges Item suchen, z. B. LEDX, Salewa, M995 …"};
+  let lang = (navigator.language || "").toLowerCase().startsWith("de") ? "de" : "en";
+  try { const saved = localStorage.getItem("ta-lang"); if (saved === "de" || saved === "en") lang = saved; } catch (e) { }
+  const t = en => lang === "de" && DE_JS[en] ? DE_JS[en] : en;
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(el => {
+      if (el.dataset.en == null) el.dataset.en = el.innerHTML;
+      el.innerHTML = lang === "de" && DE_TEXT[el.dataset.t] ? DE_TEXT[el.dataset.t] : el.dataset.en;
+    });
+    document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
+    const qi = document.getElementById("q"); if (qi) qi.placeholder = t("Search any item, e.g. LEDX, Salewa, M995 …");
+  }
+  document.querySelectorAll(".lang button").forEach(b => b.onclick = () => {
+    lang = b.dataset.lang;
+    try { localStorage.setItem("ta-lang", lang); } catch (e) { }
+    applyLang();
+    if (typeof setState === "function") setState(state.className.replace("live", "").trim(), stateMsg);
+    refresh();
+  });
+  applyLang();
+
   const API = "https://api.tarkov.dev/graphql";
   const ASSET = id => "https://assets.tarkov.dev/" + id + "-grid-image.webp";
   const TRADER_ID = { Prapor: "54cb50c76803fa8b248b4571", Therapist: "54cb57776803fa99248b456e", Skier: "58330581ace78e27b8b10cee",
@@ -524,7 +560,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     const tier = tierOf(it), tc = TIER_COLORS[tier], text = "#eef0f4";
     const junk = S.dimJunk && tier === 0;
     const tierCol = S.tiers ? tc : text;
-    const slots = it.w * it.h, perSlot = v => S.perSlot && slots > 1 ? '<span class="s">· ' + money(v / slots) + "/slot</span>" : "";
+    const slots = it.w * it.h, perSlot = v => S.perSlot && slots > 1 ? '<span class="s">· ' + money(v / slots) + t("/slot") + "</span>" : "";
     const fleaNet = net(it), best = it.traders[0];
     const anyPt = S.portraits && (S.trader || S.allTraders) && it.traders.length > 0 && !S.compact;
     const ind = anyPt ? '<span class="ind"></span>' : "";
@@ -534,28 +570,28 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     const priceCol = () => { const c = first && S.tiers ? TIER_COLORS[tierOfPrice(it)] : null; first = false; return c; };
 
     let h = '<div class="pbh"><span class="nm" style="color:' + (S.tiers && S.tierName ? tc : text) + '">' + esc(it.name.length > 30 ? it.short : it.name) + "</span>";
-    if ((S.tiers && S.tierLabel) || junk) h += '<span class="pl" style="color:' + tc + ";background:" + tc + '26">' + TIER_NAMES[junk ? 0 : tier] + "</span>";
+    if ((S.tiers && S.tierLabel) || junk) h += '<span class="pl" style="color:' + tc + ";background:" + tc + '26">' + t(TIER_NAMES[junk ? 0 : tier]) + "</span>";
     h += "</div>";
 
     if (S.compact) {
-      if (it.count) h += row("Stack (" + it.count + "):", money(value(it) * it.count), priceCol());
-      if (fleaNet > 0 && (!best || fleaNet >= best.price)) h += row("Flea:", money(fleaNet), priceCol());
+      if (it.count) h += row(t("Stack") + " (" + it.count + "):", money(value(it) * it.count), priceCol());
+      if (fleaNet > 0 && (!best || fleaNet >= best.price)) h += row(t("Flea:"), money(fleaNet), priceCol());
       else if (best) h += row(best.name + ":", money(best.price), priceCol(), "", portrait(best.name) || null);
-      else h += row("Not sellable", "", null);
+      else h += row(t("Not sellable"), "", null);
     } else {
-      if (S.ammo && it.ammo) h += row("Ammo:", "Pen " + it.ammo[0] + " · Dmg " + it.ammo[1] + (it.ammo[3] > 1 ? "×" + it.ammo[3] : "") + " · Armor " + it.ammo[2] + " %");
-      if (S.keys && it.key) h += row("Key:", (it.key[0] || "unknown map") + " · " + (it.key[1] != null && it.key[2] ? it.key[1] + "/" + it.key[2] : it.key[2]) + " uses");
-      if (it.count) h += row("Stack (" + it.count + "):", money(value(it) * it.count), priceCol());
-      if (S.flea) h += it.noFlea ? row("Flea:", "banned", "#8a93a3") : it.low > 0 ? row("Flea:", money(it.low), priceCol(), perSlot(it.low)) : row("Flea:", "no offers", "#8a93a3");
-      if (S.net && fleaNet > 0) h += row("After fee:", money(fleaNet), priceCol(), '<span class="s">· −' + money(it.low - fleaNet) + " fee</span>");
-      if (S.avg && it.avg > 0) h += row("Avg 24h:", money(it.avg), priceCol(), perSlot(it.avg));
+      if (S.ammo && it.ammo) h += row(t("Ammo:"), "Pen " + it.ammo[0] + " · Dmg " + it.ammo[1] + (it.ammo[3] > 1 ? "×" + it.ammo[3] : "") + " · Armor " + it.ammo[2] + " %");
+      if (S.keys && it.key) h += row(t("Key:"), (it.key[0] || t("unknown map")) + " · " + (it.key[1] != null && it.key[2] ? it.key[1] + "/" + it.key[2] : it.key[2]) + " " + t("uses"));
+      if (it.count) h += row(t("Stack") + " (" + it.count + "):", money(value(it) * it.count), priceCol());
+      if (S.flea) h += it.noFlea ? row(t("Flea:"), t("banned"), "#8a93a3") : it.low > 0 ? row(t("Flea:"), money(it.low), priceCol(), perSlot(it.low)) : row(t("Flea:"), t("no offers"), "#8a93a3");
+      if (S.net && fleaNet > 0) h += row(t("After fee:"), money(fleaNet), priceCol(), '<span class="s">· −' + money(it.low - fleaNet) + " " + t("fee") + "</span>");
+      if (S.avg && it.avg > 0) h += row(t("Avg 24h:"), money(it.avg), priceCol(), perSlot(it.avg));
       const tr = S.allTraders ? it.traders : S.trader ? it.traders.slice(0, 1) : [];
       tr.forEach(t => { h += row(t.name + ":", money(t.price), priceCol(), perSlot(t.price), portrait(t.name) || null); });
-      if ((S.trader || S.allTraders) && it.traders.length === 0) h += row("Trader:", "not sellable", "#8a93a3");
+      if ((S.trader || S.allTraders) && it.traders.length === 0) h += row(t("Trader:"), t("not sellable"), "#8a93a3");
       if (S.best && fleaNet > 0 && best) {
         const flea = fleaNet > best.price;
         h += '<div class="pbbar" style="background:color-mix(in srgb,' + S.accent + ' 22%,transparent);color:color-mix(in srgb,' + S.accent + ',#fff 45%)"><span>✓ ' +
-          (flea ? "Sell on the flea market" : "Sell to " + esc(best.name)) + "</span><span>+" + money(Math.abs(fleaNet - best.price)) + "</span></div>";
+          (flea ? t("Sell on the flea market") : t("Sell to") + " " + esc(best.name)) + "</span><span>+" + money(Math.abs(fleaNet - best.price)) + "</span></div>";
       }
     }
     const pic = S.picture ? '<div class="pic"><img src="' + it.img + '" alt="" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\'' +
@@ -656,8 +692,8 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     sw.appendChild(b);
   });
   function renderTierList() {
-    $("#tierlist").innerHTML = TIER_NAMES.map((n, k) => '<b style="color:' + TIER_COLORS[k] + '">' + n + "</b><span>" +
-      (k === 0 ? "below " + money(THRESHOLDS[0]) : "from " + money(THRESHOLDS[k - 1])) + (S.basis === "slot" ? " per slot" : "") + "</span>").join("");
+    $("#tierlist").innerHTML = TIER_NAMES.map((n, k) => '<b style="color:' + TIER_COLORS[k] + '">' + t(n) + "</b><span>" +
+      (k === 0 ? t("below") + " " + money(THRESHOLDS[0]) : t("from") + " " + money(THRESHOLDS[k - 1])) + (S.basis === "slot" ? " " + t("per slot") : "") + "</span>").join("");
   }
 
   // ---- live prices from tarkov.dev ----
@@ -693,6 +729,8 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     return it;
   }
   const state = $("#liveState");
+  let stateMsg = "Loading prices from tarkov.dev …";
+  function setState(kind, msg) { stateMsg = msg; state.className = "live" + (kind ? " " + kind : ""); state.textContent = t(msg); }
   // ---- reserve: the static files of json.tarkov.dev (the same source as the program uses) ----
   const JSON_BASE = () => "https://json.tarkov.dev/" + (S.mode === "pve" ? "pve" : "regular") + "/";
   const jsonCache = {};
@@ -724,7 +762,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   }
 
   async function loadPrices() {
-    state.className = "live"; state.textContent = "Loading prices from tarkov.dev …";
+    setState("", "Loading prices from tarkov.dev …");
     try {
       try {
         const ids = JSON.stringify(ITEMS.map(i => i.id));
@@ -735,13 +773,13 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
         console.warn("tarkov.dev API:", apiError, "- using json.tarkov.dev");
         await loadFromJson();   // the API is busy: the static price files
       }
-      state.className = "live ok"; state.textContent = "● Live " + (S.mode === "pve" ? "PvE" : "PvP") + " prices from tarkov.dev";
+      setState("ok", S.mode === "pve" ? "● Live PvE prices from tarkov.dev" : "● Live PvP prices from tarkov.dev");
       buildStash();
     } catch (e) {
       console.warn("tarkov.dev:", e);
-      state.className = "live off"; state.textContent = "Example prices – live prices from tarkov.dev could not be loaded, trying again …";
+      setState("off", "Example prices – live prices from tarkov.dev could not be loaded, trying again …");
       if (++loadTries < 4) setTimeout(loadPrices, 30000 * loadTries);   // tarkov.dev is sometimes busy for a while
-      else state.textContent = "Example prices – tarkov.dev is busy right now, please reload later";
+      else setState("off", "Example prices – tarkov.dev is busy right now, please reload later");
     }
     refresh();
   }
@@ -769,9 +807,9 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
           }).slice(0, 8).map(id => fromJson(id, items[id], names));
         }
         sugg.innerHTML = results.length ? results.map((r, k) => '<button data-k="' + k + '"><img src="' + r.img + '" alt="">' + esc(r.name) +
-          '<span class="p">' + (r.low ? money(r.low) : "") + "</span></button>").join("") : '<button disabled>Nothing found</button>';
+          '<span class="p">' + (r.low ? money(r.low) : "") + "</span></button>").join("") : '<button disabled>' + t("Nothing found") + "</button>";
       } catch (e) {
-        sugg.innerHTML = '<button disabled>Live search needs tarkov.dev – it is busy right now, please try again later</button>';
+        sugg.innerHTML = "<button disabled>" + t("Live search needs tarkov.dev – it is busy right now, please try again later") + "</button>";
       }
       sugg.hidden = false;
     }, 300);
