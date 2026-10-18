@@ -1,0 +1,530 @@
+[
+ {
+  "expect": "PP-19-01 Vityaz 9x19 30-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "PP-19-Ø1 Vityaz 3ø-round magazine",
+   "PP-19-Ø1 sø-rourd",
+   "PP-19-Ø1 vttyaz 3Ø-round magazine",
+   "PP-19-Ø1 Vityaz 3Ø-round magazine"
+  ],
+  "note": "OCR skips 9x19; was gas tube in 0.11"
+ },
+ {
+  "expect": "PP-19-01 Vityaz 9x19 30-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "PP-19-Ø1 Vityaz 3ø-round magazine"
+  ],
+  "note": "first reading only (30 vs 10 round)"
+ },
+ {
+  "expect": "PP-19-01 Vityaz 9x19 PUFGUN SG-919 20 20-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "PP-19-Ø1 Vityaz PUFGUN SG-919 a 2ø-rourx1 magazine",
+   "PP-19-Ø1 vrtyaz PUFGUN sg-919 2ø 2ø-r•ourø",
+   "PP-19-Ø1 Vityaz PUFGUN SG-919 a 2ø-rourd magazine"
+  ],
+  "note": "was wrongly the 30-round one"
+ },
+ {
+  "expect": "AK 7.62x39 6L10 bakelite 30-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "AK 763<39 6UØ bakelite 3ø-rourd magazine",
+   "AK bakelite 3ø-rourd",
+   "AK 6110 bakelite 3Ø-round magazine",
+   "AK 763<39 uØ bakelite 3ø-rourd magazine"
+  ]
+ },
+ {
+  "expect": "AK 7.62x39 6L10 bakelite 30-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "AK 763<39 6UØ bakelite 3ø-rourd magazine"
+  ],
+  "note": "first reading only: tie-break 30 vs 40 round"
+ },
+ {
+  "expect": "AR-15 5.56x45 Colt STANAG 30-round magazine",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "AR-IS Colt STANAG 30-round magazine",
+   "AR-IS 5S6x45 Coit STANAG 3ø-round"
+  ]
+ },
+ {
+  "expect": "MPX 9x19 30-round magazine",
+  "box": [
+   161,
+   26
+  ],
+  "readings": [
+   "MPX 3Ø-round rr.zrte",
+   "MPX 9x19 3ø-rourd rnnazrte",
+   "MPX gx19 3Ø-rourd magazine"
+  ]
+ },
+ {
+  "expect": "QBZ-191 5.8x42 30-round magazine",
+  "box": [
+   186,
+   26
+  ],
+  "readings": [
+   "OBZ-19i 5.0<42 3ø-rourd magazine",
+   "ogz-l.gt 5.ex42 3&-round rn•zrte",
+   "3Ø-rourd magazine",
+   "OBZ-1915.8x42 3Ø-rourd magazine"
+  ]
+ },
+ {
+  "expect": "Colt M4A1 5.56x45 assault rifle Carbine",
+  "box": [
+   205,
+   26
+  ],
+  "readings": [
+   "Cott M4A1 S.S6x4S assaüt rtne Carbne",
+   "Cott M4A15.S6x4S asswit Caron",
+   "Colt M4A15S6x4S assaurt rifle Carbine"
+  ]
+ },
+ {
+  "expect": "Lobaev Arms DVL-10 7.62x51 bolt-action sniper rifle Saboteur",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "Lobaev Arms DVL-IØ 76361 bolt-action snipe Sabotejr",
+   "Lobæv Arms DVL-IØ 76261 snipes sabotejr",
+   "Lobaev Arms D/L-IØ 7061 bolt-action sniper rifle SabotAjr",
+   "Lobaev Arms D.tL-1Ø 7061 bolt-action sniper rifle saboteur"
+  ]
+ },
+ {
+  "expect": "Stechkin APS 9x18PM machine pistol",
+  "box": [
+   192,
+   26
+  ],
+  "readings": [
+   "Stechkin APS 9)dBPM rnachhe pistol",
+   "StecNdn APS 3dBPM rnachlne ptstol",
+   "Stechkin APS 9)dBPM machtre pistol"
+  ]
+ },
+ {
+  "expect": "IWI UZI 9x19 submachine gun",
+  "box": [
+   161,
+   26
+  ],
+  "readings": [
+   "IWI IJZ submachine gun",
+   "IWI I-ZI submachine gun",
+   "IWI IJZ 9)d9 submachine gun",
+   "IWI IJZ 3d9 submachine gun"
+  ]
+ },
+ {
+  "expect": "Saiga-9 9x19 carbine",
+  "box": [
+   120,
+   26
+  ],
+  "readings": [
+   "3<19 carbine",
+   "Sana-9 3<19 carbine",
+   "Sa}ga-g carbine",
+   "Saiga-g carbine"
+  ]
+ },
+ {
+  "expect": "AK TDI AKM-L handguard (Anodized Bronze)",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "AK TDI A}O+-L handward (Anodized Broræe)",
+   "AK TDI Ai04-L handward (Anodized Bronæ)",
+   "AK TDI A}O+-L handguard (Anodized Broræ)"
+  ]
+ },
+ {
+  "expect": "AR-15 Lantac Dragon 5.56x45 muzzle brake",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "AR-IS Intac Dragon SS6x4S nuzzle brake",
+   "AR-15 Lantac Dragon 5S6x45 muzzle",
+   "AR-IS Lantac Dragon 55<45 muzzle brake"
+  ]
+ },
+ {
+  "expect": "Trijicon REAP-IR thermal scope",
+  "box": [
+   168,
+   26
+  ],
+  "readings": [
+   "TrlJicon REAP-IR thermal scope"
+  ]
+ },
+ {
+  "expect": "Ferro Concepts FCPC V5 Plate Carrier (Black Division)",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "Ferro Concepts FCPC VS Plate Came (Black Division)"
+  ]
+ },
+ {
+  "expect": "Dynaforce Triton M43-A chest harness (Black)",
+  "box": [
+   211,
+   37
+  ],
+  "readings": [
+   "Dynaforce Trtton M43-A chest harness",
+   "Dynaforce Trtton M43-A ctpst",
+   "Dynaforce Triton M43-A chest harress"
+  ]
+ },
+ {
+  "expect": "5.56x45mm M995",
+  "box": [
+   105,
+   26
+  ],
+  "readings": [
+   "SS6x45mm Mggs",
+   "5S6x45mm",
+   "SS6x4Smm Mggs",
+   "SS6x4Smm M99S"
+  ]
+ },
+ {
+  "expect": "Awl",
+  "box": [
+   39,
+   26
+  ],
+  "readings": [
+   "Awl"
+  ],
+  "note": "read via tiled 'Awl Awl Awl'"
+ },
+ {
+  "expect": "Chainlet",
+  "box": [
+   61,
+   26
+  ],
+  "readings": [
+   "Chainlet"
+  ]
+ },
+ {
+  "expect": "AA Battery",
+  "box": [
+   74,
+   26
+  ],
+  "readings": [
+   "AA Battery"
+  ]
+ },
+ {
+  "expect": "Zibbo lighter",
+  "box": [
+   82,
+   26
+  ],
+  "readings": [
+   "Zibbo •ter",
+   "Zlbbo *rter",
+   "Zibbo fighter"
+  ]
+ },
+ {
+  "expect": "AI-2 medkit",
+  "box": [
+   78,
+   26
+  ],
+  "readings": [
+   "AI-2 mediot",
+   "AI-2 medktt",
+   "A1-2 rnedktt"
+  ]
+ },
+ {
+  "expect": "Screw nuts",
+  "box": [
+   76,
+   26
+  ],
+  "readings": [
+   "Screa nuts",
+   "Screw ruts",
+   "Screa ruts"
+  ]
+ },
+ {
+  "expect": "Simple wallet",
+  "box": [
+   84,
+   26
+  ],
+  "readings": [
+   "SITOe wallet",
+   "Slrnpk walkt"
+  ]
+ },
+ {
+  "expect": "SAS drive",
+  "box": [
+   67,
+   26
+  ],
+  "readings": [
+   "SAS",
+   "SAS",
+   "SAS drive"
+  ]
+ },
+ {
+  "expect": "Duct tape",
+  "box": [
+   70,
+   26
+  ],
+  "readings": [
+   "DJCt tape",
+   "Duct"
+  ]
+ },
+ {
+  "expect": "Pressure gauge",
+  "box": [
+   96,
+   26
+  ],
+  "readings": [
+   "Pressure gauge"
+  ]
+ },
+ {
+  "expect": "Partisan's bag",
+  "box": [
+   89,
+   26
+  ],
+  "readings": [
+   "Partsans bag"
+  ]
+ },
+ {
+  "expect": "LEDX Skin Transilluminator",
+  "box": [
+   146,
+   26
+  ],
+  "readings": [
+   "LED( Skin TrarAllumlnator",
+   "LEDX san Trar&llurmnator",
+   "LED( San Trarsilluminator"
+  ]
+ },
+ {
+  "expect": "Disposable syringe",
+  "box": [
+   109,
+   26
+  ],
+  "readings": [
+   "Disposable sy•rnge"
+  ]
+ },
+ {
+  "expect": "Santa hat",
+  "box": [
+   69,
+   26
+  ],
+  "readings": [
+   "Santa hat"
+  ]
+ },
+ {
+  "expect": "Pack of nails",
+  "box": [
+   82,
+   26
+  ],
+  "readings": [
+   "Pack of nails"
+  ]
+ },
+ {
+  "expect": "Pack of sugar",
+  "box": [
+   88,
+   26
+  ],
+  "readings": [
+   "Pack of supr",
+   "Pack of suwr"
+  ]
+ },
+ {
+  "expect": "Can of sprats",
+  "box": [
+   87,
+   26
+  ],
+  "readings": [
+   "Can of sprats"
+  ]
+ },
+ {
+  "expect": "Can of beef stew (Small)",
+  "box": [
+   135,
+   26
+  ],
+  "readings": [
+   "Can of beef stew (9naII)",
+   "Can of beef stew (Srnall)"
+  ]
+ },
+ {
+  "expect": "Can of condensed milk",
+  "box": [
+   128,
+   26
+  ],
+  "readings": [
+   "Can of condensed milk"
+  ]
+ },
+ {
+  "expect": "Can of RatCola soda",
+  "box": [
+   117,
+   26
+  ],
+  "readings": [
+   "Can of RatCola soda"
+  ]
+ },
+ {
+  "expect": "Medical documents",
+  "box": [
+   113,
+   26
+  ],
+  "readings": [
+   "Medical documents"
+  ]
+ },
+ {
+  "expect": "T-Shaped plug",
+  "box": [
+   89,
+   26
+  ],
+  "readings": [
+   "T-Shaped pug"
+  ]
+ },
+ {
+  "expect": "Ibuprofen painkillers",
+  "box": [
+   120,
+   26
+  ],
+  "readings": [
+   "Ibl.•profen parkllers",
+   "Ibuproftn par-Mllers"
+  ]
+ },
+ {
+  "expect": "Capacitors",
+  "box": [
+   74,
+   26
+  ],
+  "readings": [
+   "Capaetors",
+   "Capact-ors"
+  ]
+ },
+ {
+  "expect": "Survivor Bas-Relief",
+  "box": [
+   113,
+   26
+  ],
+  "readings": [
+   "Sl-fltvor Bas-Reltef",
+   "Survtvor Bas-Rellef"
+  ]
+ },
+ {
+  "expect": "Aseptic bandage",
+  "box": [
+   100,
+   26
+  ],
+  "readings": [
+   "Aseptic bandage"
+  ]
+ },
+ {
+  "expect": null,
+  "box": [
+   88,
+   26
+  ],
+  "readings": [
+   "battery"
+  ],
+  "note": "D Size battery read as 'battery' must not become AA Battery (width check)"
+ },
+ {
+  "expect": null,
+  "box": [
+   39,
+   26
+  ],
+  "readings": [],
+  "note": "nothing read: no guess"
+ }
+]

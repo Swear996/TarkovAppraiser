@@ -1,0 +1,14 @@
+// Number recognition: pictures from the game (Tests\images) and what must be read from them.
+//   Kind   = "stack" (number in the corner of a cell), "durability" (armor "179/190"), "keyuses" (red "40/40")
+//   Cursor = mouse position in the picture [x, y]
+//   Max    = stack: biggest possible stack; durability: durability of a new item; keyuses: uses of a new key
+//   Expect = "80" or "179/190"; null = nothing may be read (no wrong guess)
+// New case: switch on the debug log, save the picture (screenshot or debug image at its real size), add a line.
+[
+  { "File": "vest-179-190.png", "Kind": "durability", "Cursor": [110, 120], "Max": 198, "Expect": "179/190", "Note": "FCPC V5 in the tactical rig slot" },
+  { "File": "keys-40-40.png",   "Kind": "keyuses",    "Cursor": [85, 60],   "Max": 40,  "Expect": "40/40",   "Note": "Dorm room 214 key, dark cell" },
+  { "File": "keys-40-40.png",   "Kind": "keyuses",    "Cursor": [180, 60],  "Max": 40,  "Expect": "40/40",   "Note": "Security post key, grey cell" },
+  { "File": "stack-80.png",     "Kind": "stack",      "Cursor": [13, 13],   "Max": 120, "Expect": "80",      "Note": "5.45x39mm SP - once read as 30" },
+  { "File": "stack-20-a.png",   "Kind": "stack",      "Cursor": [13, 13],   "Max": 120, "Expect": "20",      "Note": "5.56x45mm M855 - once read as 25" },
+  { "File": "stack-20-b.png",   "Kind": "stack",      "Cursor": [13, 13],   "Max": 120, "Expect": "20",      "Note": "5.56x45mm M855 - once read as 28" }
+]
