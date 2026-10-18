@@ -21,7 +21,7 @@ namespace TarkovPriceOverlay;
 
 static class Program
 {
-    public static bool JustUpdated;   // started by the updater: say so, do not open the settings window
+    public static bool JustUpdated;   // started by the updater: say so in a balloon
 
     [STAThread]
     static void Main(string[] args)
