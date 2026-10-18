@@ -18,7 +18,10 @@ static class Updates
     public static string? PageUrl => Configured ? "https://github.com/" + Repo : null;
 
     // DownloadUrl: the TarkovAppraiser.exe attached to the release (null = only the release page)
-    public sealed record Release(string Tag, string Url, string? DownloadUrl = null);
+    public sealed record Release(string Tag, string Url, string? DownloadUrl = null)
+    {
+        public string Version => Tag.TrimStart('v', 'V');   // "v1.5" -> "1.5" (shown to the user)
+    }
 
     // the newer version found by the last check (null = none); Found tells the windows about it,
     // InstallRequested is answered by the main window (download, swap, restart)

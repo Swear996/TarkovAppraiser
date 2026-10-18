@@ -17,7 +17,8 @@ public static class Changelog
         new("1.5", "2026-10-18", new[]
         {
             "Updates are shown in the settings window too: \"Update to v…\" under the menu and an Updates card on the About page.",
-            "New button \"Check for updates\" on the About page."
+            "New button \"Check for updates\" on the About page.",
+            "Versions are shown as \"1.5\" instead of \"v1.5\"."
         }),
         new("1.4", "2026-10-18", new[]
         {

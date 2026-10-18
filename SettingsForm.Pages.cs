@@ -510,10 +510,10 @@ public sealed partial class SettingsForm
     void ShowUpdateState()
     {
         var r = Updates.Available;
-        _versionLbl.Text = "Version " + Changelog.Current + (r != null ? "  \u00B7  " + string.Format(L.T("Update to {0}"), r.Tag) + " \u203A" : "");
+        _versionLbl.Text = "Version " + Changelog.Current + (r != null ? "  \u00B7  " + string.Format(L.T("Update to {0}"), r.Version) + " \u203A" : "");
         _versionLbl.Tag = r != null ? "section" : "muted";   // accent color when an update is waiting
         _versionLbl.Cursor = r != null ? Cursors.Hand : Cursors.Default;
-        _updateInfo.Text = r != null ? string.Format(L.T("Version {0} is available."), r.Tag)
+        _updateInfo.Text = r != null ? string.Format(L.T("Version {0} is available."), r.Version)
                          : Updates.Configured ? string.Format(L.T("Version {0}"), Changelog.Current) : L.T("Update check not set up in this build");
         _btnCheckUpdate.Text = L.T(r != null ? "Update now" : "Check for updates");
         _versionLbl.ForeColor = r != null ? CAccent : CMuted;

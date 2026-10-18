@@ -378,11 +378,11 @@ class MainForm : Form
         _release = release;
 
         int at = _menu.Items.IndexOf(_miStatus) + 1;   // right under the header
-        _menu.Items.Insert(at, new ToolStripMenuItem(L.T("Update available") + $": {release.Tag} …", null, (_, _) => AskForUpdate()));
+        _menu.Items.Insert(at, new ToolStripMenuItem(L.T("Update available") + $": {release.Version} …", null, (_, _) => AskForUpdate()));
         ApplyTrayTheme();
 
         _tray.ShowBalloonTip(10000, UpdateTitle,
-            string.Format(L.T("Version {0} is available (you have {1}). Click here to update."), release.Tag, Changelog.Current),
+            string.Format(L.T("Version {0} is available (you have {1}). Click here to update."), release.Version, Changelog.Current),
             ToolTipIcon.Info);
     }
 
@@ -398,7 +398,7 @@ class MainForm : Form
                                            Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
         int choice = UiDialog.Show(null, palette, L.T("Update available"),
             string.Format(L.T("Version {0} is ready (you have {1}). Tarkov Appraiser downloads it and restarts - your settings stay."),
-                _release.Tag, Changelog.Current),
+                _release.Version, Changelog.Current),
             0, L.T("Update now"), L.T("What's new"), L.T("Later"));
         if (choice == 1) { OpenUpdatePage(); return; }
         if (choice != 0) return;
