@@ -1,4 +1,4 @@
-namespace TarkovPriceOverlay;
+﻿namespace TarkovPriceOverlay;
 
 public sealed record ChangelogEntry(string Version, string Date, string[] Items);
 
@@ -17,7 +17,8 @@ public static class Changelog
         new("1.7", "2026-10-18", new[]
         {
             "Now runs on .NET 10 (support for .NET 8 ends in November 2026). Please install the .NET 10 Desktop Runtime if Windows asks for it: dotnet.microsoft.com/download/dotnet/10.0",
-            "Fixed an error message when the program was closed while the settings window was open."
+            "Fixed an error message when the program was closed while the settings window was open.",
+            "After an update the settings window opens again like at a normal start (unless \"Start minimized\" is on)."
         }),
         new("1.6", "2026-10-18", new[]
         {

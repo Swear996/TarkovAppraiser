@@ -655,7 +655,8 @@ class MainForm : Form
 
         if (Program.JustUpdated)
             _tray.ShowBalloonTip(5000, "Tarkov Appraiser", string.Format(L.T("Updated to version {0}."), Changelog.Current), ToolTipIcon.Info);
-        else if (!SettingsStore.Current.WelcomeDone)
+
+        if (!SettingsStore.Current.WelcomeDone)
             BeginInvoke(new Action(ShowWelcome));
         else if (!SettingsStore.Current.StartMinimized)
             BeginInvoke(new Action(() => OpenSettings()));
