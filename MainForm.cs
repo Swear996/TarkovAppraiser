@@ -698,6 +698,7 @@ class MainForm : Form
 
     void ReleaseHotkeys()
     {
+        if (IsDisposed || Disposing || !IsHandleCreated) return;
         UnregisterHotKey(Handle, HOTKEY_ID);
         UnregisterHotKey(Handle, PAUSE_HOTKEY_ID);
         UnregisterHotKey(Handle, STACK_HOTKEY_ID);
@@ -706,6 +707,8 @@ class MainForm : Form
 
     void RegisterHotkey()
     {
+        // the program is closing (e.g. "Exit" in the tray while the settings window was open): nothing to register
+        if (IsDisposed || Disposing || !IsHandleCreated) return;
         UnregisterHotKey(Handle, HOTKEY_ID);
         UnregisterHotKey(Handle, PAUSE_HOTKEY_ID);
         UnregisterHotKey(Handle, STACK_HOTKEY_ID);
@@ -758,7 +761,7 @@ class MainForm : Form
                 dlg.ShowDialog();
                 _settingsForm = null;
                 reopen = dlg.ReopenRequested;
-            } while (reopen);
+            } while (reopen && !IsDisposed);
         }
         catch (Exception ex)
         {
@@ -770,8 +773,11 @@ class MainForm : Form
             _settingsOpen = false;
             _settingsForm = null;
             _recording = false;
-            _overlay.HideNow();
-            RegisterHotkey();
+            if (!IsDisposed && !Disposing)   // closed because the program exits: nothing left to restore
+            {
+                if (!_overlay.IsDisposed) _overlay.HideNow();
+                RegisterHotkey();
+            }
         }
     }
 
