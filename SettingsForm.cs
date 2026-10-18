@@ -388,6 +388,8 @@ public sealed partial class SettingsForm : Form
         // GitHub button at the bottom right: opens the project page
         var github = new Pill { Tag = "chrome", Width = 34, Height = 34, Margin = new Padding(10, 3, 0, 3), IconName = "code" };
         github.Picture = LoadEmbeddedImage("github.png");   // official GitHub mark, when added (see Assets folder)
+        github.TintPicture = true;   // same color and size as the website icon next to it
+        github.PictureSize = 14;
         _tips.SetToolTip(github, L.T("Tarkov Appraiser on GitHub"));
         github.Click += (_, _) => OpenProjectPage();
 

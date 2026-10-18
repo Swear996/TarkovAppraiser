@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 
 namespace TarkovPriceOverlay;
 
@@ -46,6 +46,8 @@ public sealed class Pill : Button
 {
     bool _hover, _down;
     public Image? Picture { get; set; }       // drawn centered instead of the text (18 x 18)
+    public bool TintPicture { get; set; }     // Picture in the text color (a white logo looks like the line icons)
+    public float PictureSize { get; set; } = 18;
     public string IconName { get; set; } = ""; // vector icon (Icons.cs) instead of the text
 
     public Pill()
@@ -93,7 +95,25 @@ public sealed class Pill : Button
         if (Picture != null)
         {
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.DrawImage(Picture, icon);
+            float ps = PictureSize;
+            var pic = new RectangleF((Width - ps) / 2f, (Height - ps) / 2f, ps, ps);
+            if (!TintPicture)
+            {
+                g.DrawImage(Picture, pic);
+                return;
+            }
+            // shape of the picture (alpha) filled with the text color
+            var c = ForeColor;
+            using var attr = new System.Drawing.Imaging.ImageAttributes();
+            attr.SetColorMatrix(new System.Drawing.Imaging.ColorMatrix(new[]
+            {
+                new float[] { 0, 0, 0, 0, 0 },
+                new float[] { 0, 0, 0, 0, 0 },
+                new float[] { 0, 0, 0, 0, 0 },
+                new float[] { 0, 0, 0, c.A / 255f, 0 },
+                new float[] { c.R / 255f, c.G / 255f, c.B / 255f, 0, 1 }
+            }));
+            g.DrawImage(Picture, Rectangle.Round(pic), 0, 0, Picture.Width, Picture.Height, GraphicsUnit.Pixel, attr);
             return;
         }
         if (IconName.Length > 0)
