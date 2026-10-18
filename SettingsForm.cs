@@ -530,6 +530,7 @@ public sealed partial class SettingsForm : Form
             AmmoStats.Loaded -= OnAmmoLoaded;
             History.Changed -= OnHistoryChanged;
             History.Changed -= OnStatsChanged;
+            Updates.Found -= OnUpdateFoundHere;
             _searchTimer.Dispose();
             _flashTimer.Dispose();
             ItemInfo.Loaded -= OnAmmoLoaded;

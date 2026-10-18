@@ -10,10 +10,15 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.4";
+    public const string Current = "1.5";
 
     public static readonly ChangelogEntry[] Entries =
     {
+        new("1.5", "2026-10-18", new[]
+        {
+            "Updates are shown in the settings window too: \"Update to v…\" under the menu and an Updates card on the About page.",
+            "New button \"Check for updates\" on the About page."
+        }),
         new("1.4", "2026-10-18", new[]
         {
             "New Statistics page: value checked over all raids, best raid, most valuable finds and most checked items.",

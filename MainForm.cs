@@ -366,6 +366,13 @@ class MainForm : Form
     async Task CheckForUpdatesAsync()
     {
         var release = await Updates.CheckAsync();
+        if (release != null) Updates.Announce(release);   // -> OnUpdateFound (also from "Check for updates" in the settings)
+    }
+
+    void OnUpdateFound()
+    {
+        if (InvokeRequired) { BeginInvoke(new Action(OnUpdateFound)); return; }
+        var release = Updates.Available;
         if (release == null || _updateUrl != null) return;
         _updateUrl = release.Url;
         _release = release;
@@ -631,6 +638,8 @@ class MainForm : Form
         if (SettingsStore.Current.ShowTraderImages)
             _ = TarkovApi.LoadTraderPortraitsAsync();
         _ = StartPricesAsync();
+        Updates.Found += OnUpdateFound;
+        Updates.InstallRequested = AskForUpdate;
         if (SettingsStore.Current.CheckForUpdates)
             _ = CheckForUpdatesAsync();
 

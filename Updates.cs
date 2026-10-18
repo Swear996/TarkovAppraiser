@@ -20,6 +20,19 @@ static class Updates
     // DownloadUrl: the TarkovAppraiser.exe attached to the release (null = only the release page)
     public sealed record Release(string Tag, string Url, string? DownloadUrl = null);
 
+    // the newer version found by the last check (null = none); Found tells the windows about it,
+    // InstallRequested is answered by the main window (download, swap, restart)
+    public static Release? Available { get; private set; }
+    public static event Action? Found;
+    public static Action? InstallRequested;
+
+    public static void Announce(Release release)
+    {
+        if (Available?.Tag == release.Tag) return;
+        Available = release;
+        Found?.Invoke();
+    }
+
     // Never throws; null = no newer version (or the check was not possible)
     public static async Task<Release?> CheckAsync()
     {

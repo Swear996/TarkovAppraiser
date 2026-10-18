@@ -44,14 +44,13 @@ public sealed partial class SettingsForm
         card.Controls.Add(_btnUpdate);
         _side.Controls.Add(card);
 
-        var version = new Txt
-        {
-            Text = "Version " + Changelog.Current,
-            Font = UiFont.Text(8.5f),
-            Left = 24, Top = WindowH - 40, Width = 160, Height = 20,
-            UseMnemonic = false, Tag = "muted"
-        };
+        var version = _versionLbl;
+        version.Font = UiFont.Text(8.5f);
+        version.SetBounds(24, WindowH - 40, SideW - 30, 20);
+        version.Click += (_, _) => { if (Updates.Available != null) Updates.InstallRequested?.Invoke(); };
         _side.Controls.Add(version);
+        ShowUpdateState();
+        Updates.Found += OnUpdateFoundHere;
 
         // keep the price card and the version at the bottom (also when maximized)
         _side.Resize += (_, _) =>
@@ -496,6 +495,45 @@ public sealed partial class SettingsForm
         p.Body.Controls.Add(flow);
     }
 
+    // ---- update notice: version line in the sidebar + Updates card on the About page ----
+    readonly Txt _versionLbl = new() { UseMnemonic = false, Tag = "muted" };
+    readonly Txt _updateInfo = new() { UseMnemonic = false };
+    readonly Button _btnCheckUpdate = MakeButton("Check for updates", 170);
+
+    void OnUpdateFoundHere()
+    {
+        if (IsDisposed) return;
+        if (InvokeRequired) { BeginInvoke(new Action(OnUpdateFoundHere)); return; }
+        ShowUpdateState();
+    }
+
+    void ShowUpdateState()
+    {
+        var r = Updates.Available;
+        _versionLbl.Text = "Version " + Changelog.Current + (r != null ? "  \u00B7  " + string.Format(L.T("Update to {0}"), r.Tag) + " \u203A" : "");
+        _versionLbl.Tag = r != null ? "section" : "muted";   // accent color when an update is waiting
+        _versionLbl.Cursor = r != null ? Cursors.Hand : Cursors.Default;
+        _updateInfo.Text = r != null ? string.Format(L.T("Version {0} is available."), r.Tag)
+                         : Updates.Configured ? string.Format(L.T("Version {0}"), Changelog.Current) : L.T("Update check not set up in this build");
+        _btnCheckUpdate.Text = L.T(r != null ? "Update now" : "Check for updates");
+        _versionLbl.ForeColor = r != null ? CAccent : CMuted;
+    }
+
+    async Task CheckUpdateNowAsync()
+    {
+        if (Updates.Available != null) { Updates.InstallRequested?.Invoke(); return; }
+        _btnCheckUpdate.Enabled = false;
+        _updateInfo.Text = L.T("Checking …");
+        var r = await Updates.CheckAsync();
+        _btnCheckUpdate.Enabled = true;
+        if (r != null) Updates.Announce(r);   // -> tray message + this window
+        else
+        {
+            ShowUpdateState();
+            _updateInfo.Text = string.Format(L.T("You have the newest version ({0})."), Changelog.Current);
+        }
+    }
+
     void BuildAbout(PagePanel p)
     {
         var c = NewCard(p, null);
@@ -503,6 +541,17 @@ public sealed partial class SettingsForm
         c.Controls.Add(Lbl("Tarkov Appraiser", 82, 18, 300, "title", 15f, semi: true));
         c.Controls.Add(Stretch(Lbl("Version " + Changelog.Current + "  ·  " + L.T("Prices for your loot at a glance"), 82, 48, CardW - 98, "muted")));
         c.NextY = 78;
+        Done(p, c);
+
+        c = NewCard(p, "Updates");
+        StartRow(c);
+        _updateInfo.Font = UiFont.Text(9.5f);
+        _updateInfo.SetBounds(CardPad, c.NextY + 14, CardW - 2 * CardPad - 180, 20);
+        c.Controls.Add(Stretch(_updateInfo));
+        _btnCheckUpdate.SetBounds(CardW - CardPad - 170, c.NextY + 7, 170, 32);
+        _btnCheckUpdate.Click += async (_, _) => await CheckUpdateNowAsync();
+        c.Controls.Add(AtRight(_btnCheckUpdate));
+        c.NextY += RowH;
         Done(p, c);
 
         c = NewCard(p, "Troubleshooting");
