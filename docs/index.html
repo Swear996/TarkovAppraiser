@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarkov Appraiser – Free Escape from Tarkov Price Checker &amp; Flea Market Overlay</title>
+<meta name="description" content="Free Escape from Tarkov price checker for Windows. Hover an item and see its flea market price, trader prices, barters and crafts right next to the mouse. Screen reading only – no memory access.">
+<meta name="keywords" content="Escape from Tarkov, Tarkov price checker, EFT price checker, flea market price, Tarkov overlay, item price, loot value, tarkov tools">
+<link rel="canonical" href="https://swear996.github.io/TarkovAppraiser/">
+<link rel="icon" type="image/png" href="logo.png">
+<meta name="theme-color" content="#0d0f13">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tarkov Appraiser – Free Escape from Tarkov Price Checker">
+<meta property="og:description" content="Hover an item in Escape from Tarkov and see what it is worth: flea market, traders, barters and crafts – right next to the mouse.">
+<meta property="og:url" content="https://swear996.github.io/TarkovAppraiser/">
+<meta property="og:image" content="https://swear996.github.io/TarkovAppraiser/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://swear996.github.io/TarkovAppraiser/social-preview.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tarkov Appraiser",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Windows 10, Windows 11",
+  "description": "Free Escape from Tarkov price checker and flea market price overlay. Hover an item and see flea, trader, barter and craft value next to the mouse.",
+  "url": "https://swear996.github.io/TarkovAppraiser/",
+  "downloadUrl": "https://github.com/Swear996/TarkovAppraiser/releases/latest",
+  "image": "https://swear996.github.io/TarkovAppraiser/social-preview.png",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is Tarkov Appraiser free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Tarkov Appraiser is free and open source on GitHub." } },
+    { "@type": "Question", "name": "Does Tarkov Appraiser read the game's memory?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. It only takes a screenshot around the mouse and reads the item name with the text recognition built into Windows. It never reads or changes game memory or files and never sends input to the game." } },
+    { "@type": "Question", "name": "Where do the prices come from?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Prices and item data come from tarkov.dev and are updated regularly. PvP and PvE prices are supported." } },
+    { "@type": "Question", "name": "Can I get banned for using it?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Tarkov Appraiser does not touch the game, but Battlestate Games decides which third-party programs it tolerates. Nobody can guarantee that using it never leads to a restriction or ban. Use it at your own risk." } }
+  ]
+}
+</script>
+
+<style>
+:root{
+  --bg:#0d0f13; --panel:#161920; --panel2:#1b1f27; --line:#262b35;
+  --text:#eef0f4; --muted:#9aa3b2; --accent:#5b8cff; --accent-soft:#5b8cff22;
+  --green:#5fbf6a; --gold:#e8be5a; --warn:#e0a526;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+img{max-width:100%;height:auto}
+
+/* top bar */
+.nav{position:sticky;top:0;z-index:5;background:#0d0f13e6;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text)}
+.brand img{width:30px;height:30px;border-radius:7px}
+.nav .links{margin-left:auto;display:flex;gap:18px;font-size:15px}
+.nav .links a{color:var(--muted)}
+.nav .links a:hover{color:var(--text);text-decoration:none}
+
+/* hero */
+.hero{position:relative;padding:72px 0 64px;overflow:hidden;
+  background:radial-gradient(800px 420px at 80% 40%,#1b2a4a 0%,transparent 65%)}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+h1{font-size:clamp(34px,5vw,54px);line-height:1.1;margin:0 0 18px;letter-spacing:-.5px}
+h1 span{color:var(--accent)}
+.lead{font-size:19px;color:var(--muted);margin:0 0 28px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:10px;font-weight:700;font-size:16px}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{background:#6f9bff;text-decoration:none}
+.btn.ghost{border:1px solid var(--line);color:var(--text);background:var(--panel)}
+.btn.ghost:hover{border-color:var(--accent);text-decoration:none}
+.small{font-size:14px;color:var(--muted);margin-top:14px}
+
+/* price box mock */
+.card{background:#171a21;border:2px solid var(--green);border-radius:16px;padding:18px;display:flex;gap:16px;
+  box-shadow:0 30px 80px #000b;font-size:15px;max-width:520px;justify-self:end}
+.card .pic{width:104px;height:104px;border-radius:12px;background:#2a2e36;flex:none;align-self:center;overflow:hidden}
+.card .col{flex:1;min-width:0}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.nm{font-size:22px;font-weight:700;color:var(--green)}
+.pill{font-size:12px;color:var(--green);background:#5fbf6a26;border-radius:999px;padding:2px 10px}
+.r{display:flex;gap:10px;line-height:27px;white-space:nowrap}
+.k{width:96px;color:#8a93a3}.v{font-weight:700}.s{color:#8a93a3;font-size:12px}
+.bar{margin-top:10px;background:var(--accent-soft);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;
+  gap:10px;color:#c9d7ff;font-weight:700;font-size:13.5px}
+
+/* sections */
+section{padding:64px 0;border-top:1px solid var(--line)}
+h2{font-size:30px;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 32px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.f{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.f h3{margin:10px 0 6px;font-size:18px}
+.f p{margin:0;color:var(--muted);font-size:15px}
+.ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px}
+.shots{display:grid;grid-template-columns:1fr 1.6fr;gap:18px;align-items:start}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+figure img{display:block;width:100%}
+figcaption{padding:12px 16px;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+td{padding:14px 18px;border-top:1px solid var(--line);vertical-align:top}
+tr:first-child td{border-top:0}
+td:first-child{font-weight:700;width:190px}
+td{color:var(--muted)} td:first-child{color:var(--text)}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;
+  background:var(--accent);color:#fff;font-weight:700;margin-bottom:10px}
+.step p{margin:0;color:var(--muted)}
+kbd{background:var(--panel2);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px;font:600 14px/1.4 inherit;color:var(--text)}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 18px;margin-bottom:10px}
+summary{cursor:pointer;padding:16px 0;font-weight:700;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"›";display:inline-block;width:18px;color:var(--accent);transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+details p{margin:0 0 16px 18px;color:var(--muted)}
+.warn{background:#e0a5261a;border:1px solid #e0a52666;border-radius:14px;padding:22px}
+.warn h3{margin:0 0 8px;color:var(--warn)}
+.warn ul,.legal ul{margin:8px 0 0;padding-left:20px;color:var(--muted)}
+.legal{color:var(--muted);font-size:14px;margin-top:28px}.legal h3{color:var(--text)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+
+@media (max-width:900px){
+  .hero .wrap,.shots{grid-template-columns:1fr}
+  .card{justify-self:start}
+  .grid,.steps{grid-template-columns:1fr 1fr}
+  .nav .links{display:none}
+}
+@media (max-width:560px){
+  .grid,.steps{grid-template-columns:1fr}
+  .card{flex-direction:column}
+  .r{white-space:normal}
+  td:first-child{width:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="logo.png" alt="">Tarkov Appraiser</a>
+    <nav class="links">
+      <a href="#features">Features</a><a href="#screenshots">Screenshots</a><a href="#requirements">Requirements</a>
+      <a href="#faq">FAQ</a><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>The free <span>Escape from Tarkov</span> price checker</h1>
+      <p class="lead">Hover an item and see what it is worth – flea market, traders, barters and crafts – right next to the mouse.
+        Press <kbd>F8</kbd> or just let the mouse rest on an item.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://github.com/Swear996/TarkovAppraiser/releases/latest">⬇ Download for Windows</a>
+        <a class="btn ghost" href="https://github.com/Swear996/TarkovAppraiser">View on GitHub</a>
+      </div>
+      <p class="small">Free &amp; open source · Windows 10 / 11 · Prices from tarkov.dev · No memory reading</p>
+    </div>
+    <div class="card" aria-label="Example price box">
+      <div class="pic"><img src="awl.png" alt="" width="104" height="104"></div>
+      <div class="col">
+        <div class="hd"><span class="nm">Awl</span><span class="pill">Common</span></div>
+        <div class="r"><span class="k">Flea:</span><span class="v" style="color:var(--green)">15,000 ₽</span></div>
+        <div class="r"><span class="k">After fee:</span><span class="v">14,093 ₽</span><span class="s">· −907 ₽ fee</span></div>
+        <div class="r"><span class="k">Avg 24h:</span><span class="v">18,694 ₽</span></div>
+        <div class="r"><span class="k">Therapist:</span><span class="v">7,789 ₽</span></div>
+        <div class="bar"><span>✓ Craft: Workbench 2 → VOG-17 ×8</span><span>+8,239 ₽</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2>Features</h2>
+    <p class="sub">Everything you need to decide in a second: keep it, sell it, or trade it in.</p>
+    <div class="grid">
+      <div class="f"><div class="ic">₽</div><h3>Flea market &amp; traders</h3><p>Lowest flea price, 24h average, what you get after the fee, and the best trader with portrait.</p></div>
+      <div class="f"><div class="ic">⇄</div><h3>Barter &amp; craft tips</h3><p>When trading an item in or crafting with it brings clearly more than selling, it tells you – and how much more.</p></div>
+      <div class="f"><div class="ic">◆</div><h3>Loot tiers</h3><p>Prices colored from junk to legendary, valuable loot framed in its tier color, junk dimmed. Ammo ranked by penetration.</p></div>
+      <div class="f"><div class="ic">▦</div><h3>Read from the game</h3><p>Stack counts (e.g. 18 rounds), the real armor durability (179/190) and key uses (37/40) – read from the cell.</p></div>
+      <div class="f"><div class="ic">⚡</div><h3>Hotkey or automatic</h3><p>Press <kbd>F8</kbd>, or switch on the automatic mode and just rest the mouse on an item while looting.</p></div>
+      <div class="f"><div class="ic">◫</div><h3>Your layout</h3><p>Arrange the price box by drag &amp; drop in a live preview. Compact mode, themes and colors.</p></div>
+      <div class="f"><div class="ic">↺</div><h3>History &amp; raid total</h3><p>The last 20 items, also as a movable in-game list (<kbd>Alt</kbd>+<kbd>F8</kbd>), plus the value of this raid.</p></div>
+      <div class="f"><div class="ic">▤</div><h3>Statistics</h3><p>Value checked over all raids, your best raid, most valuable finds and most checked items.</p></div>
+      <div class="f"><div class="ic">⟳</div><h3>One-click updates</h3><p>PvP and PvE prices, many game languages, English and German interface, updates right inside the app.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots">
+  <div class="wrap">
+    <h2>Screenshots</h2>
+    <p class="sub">The price box in the game and the settings with live preview.</p>
+    <div class="shots">
+      <figure><img src="ingame.png" alt="Tarkov Appraiser price box in Escape from Tarkov" loading="lazy">
+        <figcaption>The price box next to the mouse in the stash</figcaption></figure>
+      <figure><img src="settings.png" alt="Tarkov Appraiser settings with live preview" loading="lazy">
+        <figcaption>Settings with live preview – drag &amp; drop the parts of the price box</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="requirements">
+  <div class="wrap">
+    <h2>Requirements</h2>
+    <p class="sub">Small download, no setup – it only needs .NET 8.</p>
+    <table>
+      <tr><td>Windows</td><td>Windows 10 (version 2004 or newer) or Windows 11, 64-bit</td></tr>
+      <tr><td>.NET 8</td><td>The <a href="https://dotnet.microsoft.com/download/dotnet/8.0">.NET 8 Desktop Runtime</a> (or the .NET 8 SDK). Without it, Windows offers the download when you start the program.</td></tr>
+      <tr><td>Text recognition</td><td>The Windows text recognition for your game language – usually already installed; the welcome window checks it for you.</td></tr>
+      <tr><td>Game mode</td><td>Escape from Tarkov in <em>Borderless</em> or <em>Windowed</em> mode</td></tr>
+      <tr><td>Internet</td><td>For the prices from tarkov.dev (saved prices are used when offline)</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Get started in a minute</h2>
+    <p class="sub">Download, start, hover.</p>
+    <div class="steps">
+      <div class="step"><p><b>Download</b> <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">TarkovAppraiser.exe</a> from the latest release. Windows may warn about an unknown app: <em>More info › Run anyway</em>.</p></div>
+      <div class="step"><p><b>Start it.</b> The welcome window walks you through the setup, then it waits in the tray next to the clock.</p></div>
+      <div class="step"><p><b>In Tarkov:</b> hover an item and press <kbd>F8</kbd> – or switch on the automatic mode and just hover.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>FAQ</h2>
+    <p class="sub">Short answers to common questions.</p>
+    <details><summary>Is Tarkov Appraiser free?</summary><p>Yes – free and open source on GitHub.</p></details>
+    <details><summary>Does it read the game's memory?</summary><p>No. It only takes a screenshot around the mouse and reads the item name with the text recognition built into Windows. It never reads or changes game memory or files and never sends input to the game.</p></details>
+    <details><summary>Where do the prices come from?</summary><p>From <a href="https://tarkov.dev">tarkov.dev</a>, updated regularly. PvP and PvE prices are supported.</p></details>
+    <details><summary>The price box does not appear.</summary><p>Run Tarkov in Borderless or Windowed mode and make sure the item's tooltip is visible. In automatic mode, check that it is on and not paused (Ctrl+F8).</p></details>
+    <details><summary>It shows the wrong item.</summary><p>Check Settings › Detection › Language – it has to match the game language.</p></details>
+    <details><summary>Can I get banned for using it?</summary><p>It does not touch the game, but Battlestate Games decides which third-party programs it tolerates. Nobody can guarantee that using it never leads to a restriction or ban – see the risk notice below.</p></details>
+  </div>
+</section>
+
+<section id="legal">
+  <div class="wrap">
+    <div class="warn">
+      <h3>⚠ Risk of use</h3>
+      Use Tarkov Appraiser at your own risk. Escape from Tarkov is protected by an anti-cheat system, and Battlestate Games
+      decides on its own which third-party programs it tolerates. Tarkov Appraiser only reads the screen and never touches the game,
+      but nobody can guarantee that using it will never lead to a warning, restriction or ban of your account.
+      <ul>
+        <li>Read the game's EULA / terms of use yourself and decide whether you want to use such a tool.</li>
+        <li>The authors accept no liability for account restrictions, bans, lost items, wrong prices or any other damage.</li>
+        <li>Prices come from a third party (tarkov.dev) and can be outdated or wrong – check before big trades.</li>
+      </ul>
+    </div>
+    <div class="legal">
+      <h3>Legal notice</h3>
+      <ul>
+        <li>Tarkov Appraiser is an independent fan project. It is not affiliated with, endorsed or sponsored by Battlestate Games Limited.</li>
+        <li>Escape from Tarkov and all related names, logos and item pictures are trademarks or property of Battlestate Games Limited.</li>
+        <li>Price and item data are provided by <a href="https://tarkov.dev">tarkov.dev</a> and remain the property of their respective owners.</li>
+        <li>The software is provided "as is", without warranty of any kind.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Tarkov Appraiser – free Escape from Tarkov price checker</span>
+    <span><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a> · <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">Download</a> · <a href="https://github.com/Swear996/TarkovAppraiser/issues">Report a problem</a></span>
+  </div>
+</footer>
+</body>
+</html>

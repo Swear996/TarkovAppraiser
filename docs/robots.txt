@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://swear996.github.io/TarkovAppraiser/sitemap.xml

@@ -20,9 +20,12 @@
   <a href="#legal-notice">Legal notice</a>
 </p>
 
-Hover an item in Escape from Tarkov – Tarkov Appraiser shows what it is worth, right next to the mouse:
-flea market, traders, barters and crafts, and where you get the most for it.
+**Tarkov Appraiser is a free Escape from Tarkov price checker and flea market price overlay for Windows.**
+Hover an item in EFT – it shows what the item is worth, right next to the mouse: flea market price, trader
+prices, barters and crafts, and where you get the most for it.
 Press **F8**, or switch on the **automatic mode** and you don't even need a key.
+
+🌐 **Website:** [swear996.github.io/TarkovAppraiser](https://swear996.github.io/TarkovAppraiser/)
 
 ## Requirements
 
