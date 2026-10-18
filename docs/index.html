@@ -177,6 +177,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 .cell .sn{position:absolute;top:2px;right:4px;font-size:10px;color:#cfd4dc;text-shadow:0 1px 2px #000;max-width:95%;overflow:hidden;white-space:nowrap}
 .cell .cnt{position:absolute;bottom:2px;right:4px;font-size:11px;font-weight:700;color:#e6e8ec;text-shadow:0 1px 2px #000}
 .cell .cnt.red{color:#e5483c}
+.cell img + .ph{display:none}
 .cell .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;color:#8a93a3;text-align:center;padding:4px}
 .pinned{margin-top:14px}
 .note{color:var(--muted);font-size:13px;margin:14px 0 0}
@@ -582,8 +583,8 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   const stash = $("#stash"), pop = $("#pop"), pinned = $("#pinned"), preview = $("#preview");
   let current = ITEMS[0], shown = null;
   function cellHtml(it) {
-    let c = '<img src="' + it.img + '" alt="' + esc(it.name) + '" loading="lazy" onerror="this.remove()"><span class="ph">' + esc(it.short) + "</span>";
-    c += '<span class="sn">' + esc(it.short) + "</span>";
+    let c = '<img src="' + it.img + '" alt="' + esc(it.name) + '" loading="lazy" onerror="this.remove()"><span class="ph">' + esc(it.short) + "</span>";   // the name shows only when the picture is missing
+    // no extra name label: the tarkov.dev inventory picture already shows the short name like in the game
     if (it.count) c += '<span class="cnt">' + it.count + "</span>";
     if (it.key && it.key[1] != null) c += '<span class="cnt red">' + it.key[1] + "/" + it.key[2] + "</span>";
     return c;
@@ -604,8 +605,6 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
       stash.appendChild(d);
       it.el = d;
     });
-    // the placeholder text only shows when the picture did not load
-    stash.querySelectorAll(".cell img").forEach(img => img.addEventListener("load", () => { const p = img.parentNode.querySelector(".ph"); if (p) p.remove(); }));
   }
   function show(it, e) { shown = it; current = it; pop.innerHTML = box(it); pop.hidden = false; boxStyle(pop.firstChild, 1, innerWidth - 24); place(e); renderPreview(); }
   function hide() { pop.hidden = true; shown = null; }
@@ -665,11 +664,22 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   const FIELDS = "id name shortName width height basePrice avg24hPrice lastLowPrice types gridImageLink " +
     "sellFor { priceRUB vendor { name normalizedName } } " +
     "properties { ...on ItemPropertiesAmmo { penetrationPower damage armorDamage projectileCount } ...on ItemPropertiesKey { uses } }";
+  // GET first (a "simple" request: no CORS preflight), POST as second try
   async function gql(query) {
-    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) });
-    const j = await r.json();
-    if (!j.data) throw new Error("no data");
-    return j.data;
+    const tries = [
+      () => fetch(API + "?query=" + encodeURIComponent(query)),
+      () => fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) })
+    ];
+    let last;
+    for (const t of tries) {
+      try {
+        const r = await t();
+        const j = await r.json();
+        if (j.data) return j.data;
+        last = new Error(j.errors && j.errors[0] ? j.errors[0].message || String(j.errors[0]) : "no data");
+      } catch (e) { last = e; }
+    }
+    throw last;
   }
   function fromApi(x, old) {
     const traders = (x.sellFor || []).filter(s => s.vendor && s.vendor.normalizedName !== "flea-market" && s.priceRUB > 0)
@@ -693,10 +703,14 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
       state.className = "live ok"; state.textContent = "● Live " + (S.mode === "pve" ? "PvE" : "PvP") + " prices from tarkov.dev";
       buildStash();
     } catch (e) {
-      state.className = "live off"; state.textContent = "Example prices – tarkov.dev is not reachable right now";
+      console.warn("tarkov.dev:", e);
+      state.className = "live off"; state.textContent = "Example prices – live prices from tarkov.dev could not be loaded, trying again …";
+      if (++loadTries < 4) setTimeout(loadPrices, 30000 * loadTries);   // tarkov.dev is sometimes busy for a while
+      else state.textContent = "Example prices – tarkov.dev is busy right now, please reload later";
     }
     refresh();
   }
+  let loadTries = 0;
 
   // ---- search any item ----
   const q = $("#q"), sugg = $("#sugg");
@@ -712,7 +726,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
         sugg.innerHTML = results.length ? results.map((r, k) => '<button data-k="' + k + '"><img src="' + r.img + '" alt="">' + esc(r.name) +
           '<span class="p">' + (r.low ? money(r.low) : "") + "</span></button>").join("") : '<button disabled>Nothing found</button>';
       } catch (e) {
-        sugg.innerHTML = '<button disabled>Live search needs tarkov.dev – it is not reachable right now</button>';
+        sugg.innerHTML = '<button disabled>Live search needs tarkov.dev – it is busy right now, please try again later</button>';
       }
       sugg.hidden = false;
     }, 300);
