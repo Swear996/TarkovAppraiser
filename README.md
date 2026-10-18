@@ -25,7 +25,7 @@ Hover an item in EFT – it shows what the item is worth, right next to the mous
 prices, barters and crafts, and where you get the most for it.
 Press **F8**, or switch on the **automatic mode** and you don't even need a key.
 
-🌐 **Website:** [swear996.github.io/TarkovAppraiser](https://swear996.github.io/TarkovAppraiser/)
+🌐 **Website & live demo:** [swear996.github.io/TarkovAppraiser](https://swear996.github.io/TarkovAppraiser/) – hover items, search any item and change the settings right in your browser
 
 ## Requirements
 

@@ -77,7 +77,7 @@ img{max-width:100%;height:auto}
 /* hero */
 .hero{position:relative;padding:72px 0 64px;overflow:hidden;
   background:radial-gradient(800px 420px at 80% 40%,#1b2a4a 0%,transparent 65%)}
-.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center}
 h1{font-size:clamp(34px,5vw,54px);line-height:1.1;margin:0 0 18px;letter-spacing:-.5px}
 h1 span{color:var(--accent)}
 .lead{font-size:19px;color:var(--muted);margin:0 0 28px}
@@ -90,11 +90,11 @@ h1 span{color:var(--accent)}
 .small{font-size:14px;color:var(--muted);margin-top:14px}
 
 /* price box mock */
-.card{background:#171a21;border:2px solid var(--green);border-radius:16px;padding:18px;display:flex;gap:16px;
+.card{background:#171a21;border:2px solid var(--green);border-radius:16px;padding:18px;display:flex;
   box-shadow:0 30px 80px #000b;font-size:15px;max-width:520px;justify-self:end}
 .card .pic{width:104px;height:104px;border-radius:12px;background:#2a2e36;flex:none;align-self:center;overflow:hidden}
 .card .col{flex:1;min-width:0}
-.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
 .nm{font-size:22px;font-weight:700;color:var(--green)}
 .pill{font-size:12px;color:var(--green);background:#5fbf6a26;border-radius:999px;padding:2px 10px}
 .r{display:flex;gap:10px;line-height:27px;white-space:nowrap}
@@ -139,15 +139,123 @@ details p{margin:0 0 16px 18px;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:14px}
 footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 
+
+/* rotating examples in the hero */
+.showcase{justify-self:end;width:520px;max-width:100%;min-width:0}
+.card{min-height:236px;width:100%;max-width:none;overflow:hidden;transition:border-color .5s}
+.card .inner{display:flex;gap:16px;width:100%;transition:opacity .45s ease,transform .45s ease}
+.card .inner.out{opacity:0;transform:translateY(10px)}
+.card .pic img{width:104px;height:104px;display:block}
+.info{line-height:24px;white-space:nowrap;font-size:14px}.info .k{display:inline-block}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.dots button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:#3a404c;cursor:pointer;transition:background .3s,width .3s}
+.dots button.on{background:var(--accent);width:22px;border-radius:5px}
+@media (prefers-reduced-motion:reduce){.card .inner{transition:none}}
+
+[hidden]{display:none!important}
+/* ---------- try it: stash + settings + price box ---------- */
+.live{display:inline-block;margin-left:6px;font-size:13px;padding:2px 10px;border-radius:999px;background:var(--panel2);color:var(--muted)}
+.live.ok{color:var(--green);background:#5fbf6a1f}.live.off{color:var(--warn);background:#e0a5261a}
+.try{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;align-items:start;position:relative}
+.stashcol{min-width:0}
+.search{position:relative;margin-bottom:14px}
+.search input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;outline:none}
+.search input:focus{border-color:var(--accent)}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--panel2);border:1px solid var(--line);border-radius:10px;z-index:20;overflow:hidden;box-shadow:0 20px 40px #0008}
+.sugg button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;background:none;border:0;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.sugg button:hover,.sugg button.on{background:#ffffff0d}
+.sugg img{width:32px;height:32px;object-fit:contain}
+.sugg .p{margin-left:auto;color:var(--muted);font-size:14px}
+.stashhead{display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.8px;color:#8a93a3;margin-bottom:6px}
+.stashhead .hint{font-weight:400;letter-spacing:0}
+.stash{--c:64px;display:grid;grid-template-columns:repeat(auto-fill,var(--c));grid-auto-rows:var(--c);grid-auto-flow:dense;gap:2px;
+  padding:6px;background:#0f1115;border:1px solid var(--line);border-radius:10px;
+  background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:66px 66px}
+.cell{position:relative;background:#1b1f26;border:1px solid #2c323c;border-radius:3px;cursor:pointer;overflow:hidden;transition:border-color .15s,background .15s}
+.cell:hover,.cell.on{border-color:var(--accent);background:#222833}
+.cell img{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain}
+.cell .sn{position:absolute;top:2px;right:4px;font-size:10px;color:#cfd4dc;text-shadow:0 1px 2px #000;max-width:95%;overflow:hidden;white-space:nowrap}
+.cell .cnt{position:absolute;bottom:2px;right:4px;font-size:11px;font-weight:700;color:#e6e8ec;text-shadow:0 1px 2px #000}
+.cell .cnt.red{color:#e5483c}
+.cell .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;color:#8a93a3;text-align:center;padding:4px}
+.pinned{margin-top:14px}
+.note{color:var(--muted);font-size:13px;margin:14px 0 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;position:sticky;top:76px}
+.ptabs{display:flex;gap:4px;background:#0f1115;padding:4px;border-radius:10px;margin-bottom:12px}
+.ptabs button{flex:1;padding:7px 6px;border:0;border-radius:7px;background:none;color:var(--muted);font:600 13px inherit;cursor:pointer}
+.ptabs button.on{background:var(--panel2);color:var(--text)}
+.ppage{display:flex;flex-direction:column;gap:8px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.sw{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;user-select:none;line-height:1.25}
+.sw input{position:absolute;opacity:0;pointer-events:none}
+.sw span{flex:none;width:32px;height:18px;border-radius:9px;background:#3a404c;position:relative;transition:background .2s}
+.sw span::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s}
+.sw input:checked+span{background:var(--accent)}
+.sw input:checked+span::after{left:17px}
+.sw input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.prow{display:flex;align-items:center;gap:10px;font-size:13px;margin-top:4px}
+.prow>span{color:var(--muted);min-width:96px}
+.prow input[type=range]{flex:1;accent-color:var(--accent)}
+.prow b{font-size:12px;min-width:40px;text-align:right}
+.seg{display:flex;background:#0f1115;border-radius:8px;padding:3px;gap:2px}
+.seg button{border:0;background:none;color:var(--muted);padding:5px 10px;border-radius:6px;font:600 12px inherit;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.swatches{display:flex;gap:8px}
+.swatches button{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.swatches button.on{border-color:#fff}
+.tierlist{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px;margin-top:6px;color:var(--muted)}
+.tierlist b{font-weight:700}
+.preview{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.ptitle{display:block;font-size:12px;font-weight:700;color:#8a93a3;letter-spacing:.6px;margin-bottom:8px;text-transform:uppercase}
+#preview{display:flex;justify-content:center;min-height:120px;overflow:hidden}
+.pop{position:absolute;z-index:30;pointer-events:none;transition:opacity .12s}
+
+/* the price box (looks like the one in the program) */
+.pb{--a:var(--accent);background:#14171d;border:1px solid #2a2f39;border-radius:14px;padding:13px;color:var(--text);font-size:13px;
+  box-shadow:0 18px 50px #000b;display:inline-flex;gap:12px;transform-origin:top left;width:max-content}
+.pb.top{flex-direction:column}
+.pb.right{flex-direction:row-reverse}
+.pb.framed{border-width:2px}
+.pb.junk{filter:saturate(.6)}
+.pb.junk .pbc{opacity:.6}
+.pb .pic{width:86px;height:86px;border-radius:10px;background:#232831;flex:none;align-self:center;display:grid;place-items:center;overflow:hidden}
+.pb .pic img{width:78px;height:78px;object-fit:contain}
+.pb.top .pic{align-self:center}
+.pbc{min-width:0}
+.pbh{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.pbh .nm{font-size:16px;font-weight:700;white-space:nowrap}
+.pbh .pl{font-size:11px;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.pbr{display:flex;align-items:center;gap:8px;line-height:23px;white-space:nowrap}
+.pbr .k{color:#8a93a3}
+.pbr .v{font-weight:700}
+.pbr .s{color:#8a93a3;font-size:11px}
+.pbr .pt{width:18px;height:18px;border-radius:50%;object-fit:cover;background:#2a2f39;flex:none}
+.pbr .ind{width:18px;flex:none}
+.pbbar{margin-top:7px;border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;gap:14px;font-weight:700;font-size:12.5px;white-space:nowrap}
+
+@media (max-width:980px){
+  .try{grid-template-columns:1fr}
+  .panel{position:static}
+}
+@media (max-width:560px){
+  .stash{--c:52px;background-size:54px 54px}
+  .pgrid{grid-template-columns:1fr}
+}
+
+#try .wrap{position:relative}
+.heroBox{min-height:260px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease,transform .35s ease}
+.heroBox.out{opacity:0;transform:translateY(8px)}
+@media (prefers-reduced-motion:reduce){.heroBox{transition:none}}
+
 @media (max-width:900px){
-  .hero .wrap,.shots{grid-template-columns:1fr}
-  .card{justify-self:start}
+  .hero .wrap,.shots{grid-template-columns:minmax(0,1fr)}
+  .showcase{justify-self:start}
   .grid,.steps{grid-template-columns:1fr 1fr}
   .nav .links{display:none}
 }
 @media (max-width:560px){
   .grid,.steps{grid-template-columns:1fr}
-  .card{flex-direction:column}
+  .card .inner{flex-direction:column}
   .r{white-space:normal}
   td:first-child{width:auto}
 }
@@ -159,7 +267,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   <div class="wrap">
     <a class="brand" href="#"><img src="logo.png" alt="">Tarkov Appraiser</a>
     <nav class="links">
-      <a href="#features">Features</a><a href="#screenshots">Screenshots</a><a href="#requirements">Requirements</a>
+      <a href="#features">Features</a><a href="#try">Try it</a><a href="#requirements">Requirements</a>
       <a href="#faq">FAQ</a><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a>
     </nav>
   </div>
@@ -174,20 +282,13 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
         Press <kbd>F8</kbd> or just let the mouse rest on an item.</p>
       <div class="btns">
         <a class="btn primary" href="https://github.com/Swear996/TarkovAppraiser/releases/latest">⬇ Download for Windows</a>
-        <a class="btn ghost" href="https://github.com/Swear996/TarkovAppraiser">View on GitHub</a>
+        <a class="btn ghost" href="#try">Try it in the browser</a>
       </div>
       <p class="small">Free &amp; open source · Windows 10 / 11 · Prices from tarkov.dev · No memory reading</p>
     </div>
-    <div class="card" aria-label="Example price box">
-      <div class="pic"><img src="awl.png" alt="" width="104" height="104"></div>
-      <div class="col">
-        <div class="hd"><span class="nm">Awl</span><span class="pill">Common</span></div>
-        <div class="r"><span class="k">Flea:</span><span class="v" style="color:var(--green)">15,000 ₽</span></div>
-        <div class="r"><span class="k">After fee:</span><span class="v">14,093 ₽</span><span class="s">· −907 ₽ fee</span></div>
-        <div class="r"><span class="k">Avg 24h:</span><span class="v">18,694 ₽</span></div>
-        <div class="r"><span class="k">Therapist:</span><span class="v">7,789 ₽</span></div>
-        <div class="bar"><span>✓ Craft: Workbench 2 → VOG-17 ×8</span><span>+8,239 ₽</span></div>
-      </div>
+    <div class="showcase">
+      <div class="heroBox" id="card" aria-live="polite" aria-label="Example price box"></div>
+      <div class="dots" id="dots" role="tablist" aria-label="Examples"></div>
     </div>
   </div>
 </div>
@@ -198,28 +299,80 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     <p class="sub">Everything you need to decide in a second: keep it, sell it, or trade it in.</p>
     <div class="grid">
       <div class="f"><div class="ic">₽</div><h3>Flea market &amp; traders</h3><p>Lowest flea price, 24h average, what you get after the fee, and the best trader with portrait.</p></div>
-      <div class="f"><div class="ic">⇄</div><h3>Barter &amp; craft tips</h3><p>When trading an item in or crafting with it brings clearly more than selling, it tells you – and how much more.</p></div>
+      <div class="f"><div class="ic">⇄</div><h3>Best way to sell</h3><p>Flea, trader – or a barter / craft when trading it in brings clearly more. The recommendation tells you where and how much more.</p></div>
       <div class="f"><div class="ic">◆</div><h3>Loot tiers</h3><p>Prices colored from junk to legendary, valuable loot framed in its tier color, junk dimmed. Ammo ranked by penetration.</p></div>
       <div class="f"><div class="ic">▦</div><h3>Read from the game</h3><p>Stack counts (e.g. 18 rounds), the real armor durability (179/190) and key uses (37/40) – read from the cell.</p></div>
       <div class="f"><div class="ic">⚡</div><h3>Hotkey or automatic</h3><p>Press <kbd>F8</kbd>, or switch on the automatic mode and just rest the mouse on an item while looting.</p></div>
-      <div class="f"><div class="ic">◫</div><h3>Your layout</h3><p>Arrange the price box by drag &amp; drop in a live preview. Compact mode, themes and colors.</p></div>
+      <div class="f"><div class="ic">◫</div><h3>Your layout</h3><p>Arrange the price box by drag &amp; drop in a live preview. Compact mode, themes and colors – <a href="#try">try it above</a>.</p></div>
       <div class="f"><div class="ic">↺</div><h3>History &amp; raid total</h3><p>The last 20 items, also as a movable in-game list (<kbd>Alt</kbd>+<kbd>F8</kbd>), plus the value of this raid.</p></div>
       <div class="f"><div class="ic">▤</div><h3>Statistics</h3><p>Value checked over all raids, your best raid, most valuable finds and most checked items.</p></div>
-      <div class="f"><div class="ic">⟳</div><h3>One-click updates</h3><p>A new version is offered at startup – one click and it installs itself. PvP and PvE prices, many game languages, English and German interface.</p></div>
+      <div class="f"><div class="ic">⟳</div><h3>One-click updates</h3><p>At startup a popup offers a new version – “Download Now” installs it and restarts. PvP and PvE prices, many languages, English and German interface.</p></div>
     </div>
   </div>
 </section>
 
-<section id="screenshots">
+<section id="try">
   <div class="wrap">
-    <h2>Screenshots</h2>
-    <p class="sub">The price box in the game and the settings with live preview.</p>
-    <div class="shots">
-      <figure><img src="ingame.png" alt="Tarkov Appraiser price box in Escape from Tarkov" loading="lazy">
-        <figcaption>The price box next to the mouse in the stash</figcaption></figure>
-      <figure><img src="settings.png" alt="Tarkov Appraiser settings with live preview" loading="lazy">
-        <figcaption>Settings with live preview – drag &amp; drop the parts of the price box</figcaption></figure>
+    <h2>Try it right here</h2>
+    <p class="sub">Hover the items like in your stash – the price box appears next to the mouse. Change the settings on the right and watch it update live.
+      <span class="live" id="liveState">Loading prices from tarkov.dev …</span></p>
+    <div class="try">
+      <div class="stashcol">
+        <div class="search">
+          <input id="q" type="search" placeholder="Search any item, e.g. LEDX, Salewa, M995 …" autocomplete="off" aria-label="Search an item">
+          <div class="sugg" id="sugg" hidden></div>
+        </div>
+        <div class="stashhead"><span>STASH</span><span class="hint">hover an item · tap on a phone</span></div>
+        <div class="stash" id="stash" aria-label="Demo stash"></div>
+        <div class="pinned" id="pinned" hidden></div>
+        <p class="note">Demo in your browser with live tarkov.dev prices. The real program reads the item under your mouse in the game,
+          including stack counts, armor durability and key uses, and adds barter &amp; craft tips.</p>
+      </div>
+      <div class="panel" aria-label="Demo settings">
+        <div class="ptabs" role="tablist">
+          <button class="on" data-tab="overlay">Overlay</button><button data-tab="tiers">Loot Tiers</button><button data-tab="look">Appearance</button>
+        </div>
+        <div class="ppage" data-page="overlay">
+          <label class="sw"><input type="checkbox" data-set="compact"><span></span>Compact – name and best price only</label>
+          <div class="pgrid">
+            <label class="sw"><input type="checkbox" data-set="flea" checked><span></span>Lowest flea price</label>
+            <label class="sw"><input type="checkbox" data-set="net" checked><span></span>After the flea fee</label>
+            <label class="sw"><input type="checkbox" data-set="avg" checked><span></span>24h average</label>
+            <label class="sw"><input type="checkbox" data-set="trader" checked><span></span>Best trader</label>
+            <label class="sw"><input type="checkbox" data-set="allTraders"><span></span>All traders</label>
+            <label class="sw"><input type="checkbox" data-set="perSlot" checked><span></span>Price per slot</label>
+            <label class="sw"><input type="checkbox" data-set="best" checked><span></span>Where to sell</label>
+            <label class="sw"><input type="checkbox" data-set="picture" checked><span></span>Item picture</label>
+            <label class="sw"><input type="checkbox" data-set="portraits" checked><span></span>Trader portraits</label>
+            <label class="sw"><input type="checkbox" data-set="ammo" checked><span></span>Ammo values</label>
+            <label class="sw"><input type="checkbox" data-set="keys" checked><span></span>Key info</label>
+            <label class="sw"><input type="checkbox" data-set="intel"><span></span>Intel Center 3 (−30 % fee)</label>
+          </div>
+          <div class="prow"><span>Picture</span>
+            <div class="seg" data-seg="side"><button class="on" data-v="left">Left</button><button data-v="right">Right</button><button data-v="top">Top</button></div></div>
+        </div>
+        <div class="ppage" data-page="tiers" hidden>
+          <label class="sw"><input type="checkbox" data-set="tiers" checked><span></span>Color prices by tier</label>
+          <label class="sw"><input type="checkbox" data-set="tierName" checked><span></span>Color the item name</label>
+          <label class="sw"><input type="checkbox" data-set="tierLabel" checked><span></span>Show the tier name</label>
+          <label class="sw"><input type="checkbox" data-set="frame" checked><span></span>Frame in the tier color</label>
+          <label class="sw"><input type="checkbox" data-set="dimJunk" checked><span></span>Dim junk</label>
+          <label class="sw"><input type="checkbox" data-set="ammoTier" checked><span></span>Ammo: tier by penetration</label>
+          <div class="prow"><span>Tiers based on</span>
+            <div class="seg" data-seg="basis"><button class="on" data-v="slot">Per slot</button><button data-v="total">Total</button></div></div>
+          <div class="tierlist" id="tierlist"></div>
+        </div>
+        <div class="ppage" data-page="look" hidden>
+          <div class="prow"><span>Accent color</span><div class="swatches" id="swatches"></div></div>
+          <div class="prow"><span>Size</span><input type="range" min="80" max="130" value="100" data-range="size" aria-label="Size"><b id="sizeV">100 %</b></div>
+          <div class="prow"><span>Opacity</span><input type="range" min="60" max="100" value="100" data-range="opacity" aria-label="Opacity"><b id="opV">100 %</b></div>
+          <div class="prow"><span>Mode</span>
+            <div class="seg" data-seg="mode"><button class="on" data-v="pvp">PvP</button><button data-v="pve">PvE</button></div></div>
+        </div>
+        <div class="preview"><span class="ptitle">Live preview</span><div id="preview"></div></div>
+      </div>
     </div>
+    <div class="pop" id="pop" hidden></div>
   </div>
 </section>
 
@@ -253,6 +406,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
   <div class="wrap">
     <h2>FAQ</h2>
     <p class="sub">Short answers to common questions.</p>
+    <details><summary>Can I try it before downloading?</summary><p>Yes – the <a href="#try">demo above</a> uses live tarkov.dev prices: hover the items, search any item and change the settings.</p></details>
     <details><summary>Is Tarkov Appraiser free?</summary><p>Yes – free and open source on GitHub.</p></details>
     <details><summary>Does it read the game's memory?</summary><p>No. It only takes a screenshot around the mouse and reads the item name with the text recognition built into Windows. It never reads or changes game memory or files and never sends input to the game.</p></details>
     <details><summary>Where do the prices come from?</summary><p>From <a href="https://tarkov.dev">tarkov.dev</a>, updated regularly. PvP and PvE prices are supported.</p></details>
@@ -294,5 +448,316 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     <span><a href="https://github.com/Swear996/TarkovAppraiser">GitHub</a> · <a href="https://github.com/Swear996/TarkovAppraiser/releases/latest">Download</a> · <a href="https://github.com/Swear996/TarkovAppraiser/issues">Report a problem</a></span>
   </div>
 </footer>
+
+<script>
+// ------------------------------------------------------------
+//  Live demo: stash + price box + settings, like the program.
+//  Prices come live from api.tarkov.dev; when it can't be reached, example prices are shown.
+// ------------------------------------------------------------
+(function () {
+  "use strict";
+  const API = "https://api.tarkov.dev/graphql";
+  const ASSET = id => "https://assets.tarkov.dev/" + id + "-grid-image.webp";
+  const TRADER_ID = { Prapor: "54cb50c76803fa8b248b4571", Therapist: "54cb57776803fa99248b456e", Skier: "58330581ace78e27b8b10cee",
+    Peacekeeper: "5935c25fb3acc3127c3d8cd9", Mechanic: "5a7c2eca46aef81a7ca2145d", Ragman: "5ac3b934156ae10c4430e83c",
+    Jaeger: "5c0647fdd443bc2504c2d371", Fence: "579dc571d53a0658a154fbec", Ref: "6617beeaa9cfa777ca915b7c" };
+  const TIER_NAMES = ["Junk", "Common", "Good", "Rare", "Legendary"];
+  const TIER_COLORS = ["#9aa0a6", "#5cc46b", "#4da3ff", "#b66dff", "#ffb300"];
+  const THRESHOLDS = [10000, 25000, 50000, 100000];
+  const ACCENTS = ["#5b8cff", "#2ec4b6", "#ff7a45", "#b66dff", "#e8be5a"];
+
+  // demo stash (example prices are only used while tarkov.dev can't be reached)
+  // [id, name, short, w, h, basePrice, lowestFlea, avg24h, [[trader, price]], extra]
+  const RAW = [
+    ["5c0530ee86f774697952d952", "LEDX Skin Transilluminator", "LEDX", 1, 1, 270000, 880000, 905000, [["Therapist", 216000]]],
+    ["57347ca924597744596b4e71", "Graphics card", "GPU", 2, 1, 98000, 390000, 400000, [["Mechanic", 78400]]],
+    ["590c657e86f77412b013051d", "Grizzly medical kit", "Grizzly", 2, 2, 21000, 46000, 48000, [["Therapist", 16800]]],
+    ["59faff1d86f7746c51718c9c", "Physical bitcoin", "0.2BTC", 1, 1, 150000, 520000, 535000, [["Therapist", 120000]]],
+    ["5d1b376e86f774252519444e", "Bottle of Fierce Hatchling moonshine", "Moonshine", 1, 2, 40000, 160000, 165000, [["Therapist", 32000]]],
+    ["59e690b686f7746c9f75e848", "5.56x45mm M995", "M995", 1, 1, 900, 1300, 1320, [["Peacekeeper", 300]], { count: 60, ammo: [53, 42, 58, 1] }],
+    ["5c12613b86f7743bbe2c3f76", "Intelligence folder", "Intelligence", 2, 1, 60000, 300000, 310000, [["Therapist", 48000]]],
+    ["544fb45d4bdc2dee738b4568", "Salewa first aid kit", "Salewa", 1, 2, 10000, 25000, 26000, [["Therapist", 8000]]],
+    ["5780cf7f2459777de4559322", "Dorm room 314 marked key", "314", 1, 1, 9000, 2400000, 2500000, [["Therapist", 7200]], { key: ["Customs", 7, 10] }],
+    ["5c12620d86f7743f8b198b72", "Tetriz portable game console", "Tetriz", 1, 1, 20000, 62000, 65000, [["Therapist", 16000]]],
+    ["54527ac44bdc2d36668b4567", "5.56x45mm M855A1", "M855A1", 1, 1, 700, 900, 950, [["Peacekeeper", 230]], { count: 37, ammo: [44, 49, 52, 1] }],
+    ["590a3efd86f77437d351a25b", "Gas analyzer", "GasAn", 1, 2, 10000, 35000, 36000, [["Therapist", 8000]]],
+    ["5c052e6986f7746b207bc3c9", "Portable defibrillator", "Defib", 1, 1, 60000, 480000, 500000, [["Therapist", 48000]]],
+    ["544fb25a4bdc2dfb738b4567", "Aseptic bandage", "Aseptic", 1, 1, 1000, 2184, 3039, [["Therapist", 594]]],
+    ["590c31c586f774245e3141b2", "Pack of nails", "Nails", 1, 1, 7000, 20000, 21000, [["Mechanic", 5600]]],
+    ["5c1d0efb86f7744baf2e7b7b", "TerraGroup Labs keycard (Red)", "Red", 1, 1, 100000, 9000000, 9500000, [["Therapist", 80000]], { key: ["The Lab", 10, 10] }]
+  ];
+  const ITEMS = RAW.map(r => ({ id: r[0], name: r[1], short: r[2], w: r[3], h: r[4], base: r[5], low: r[6], avg: r[7],
+    traders: r[8].map(t => ({ name: t[0], price: t[1] })), noFlea: false, img: ASSET(r[0]),
+    count: r[9] && r[9].count, ammo: r[9] && r[9].ammo, key: r[9] && r[9].key }));
+
+  const S = { compact: false, flea: true, net: true, avg: true, trader: true, allTraders: false, perSlot: true, best: true,
+    picture: true, portraits: true, ammo: true, keys: true, intel: false, side: "left",
+    tiers: true, tierName: true, tierLabel: true, frame: true, dimJunk: true, ammoTier: true, basis: "slot",
+    accent: ACCENTS[0], size: 100, opacity: 100, mode: "pvp" };
+
+  const $ = s => document.querySelector(s);
+  const money = v => Math.round(v).toLocaleString("en-US") + " ₽";
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // flea fee, formula from the EFT wiki (the same as in the program)
+  function fee(base, price) {
+    if (base <= 0 || price <= 0) return 0;
+    let po = Math.log10(base / price), pr = Math.log10(price / base);
+    if (price < base) po = Math.pow(po, 1.08); else pr = Math.pow(pr, 1.08);
+    let f = base * 0.03 * Math.pow(4, po) + price * 0.03 * Math.pow(4, pr);
+    if (S.intel) f *= 0.7;
+    return Math.ceil(f);
+  }
+  const net = it => (it.noFlea || it.low <= 0 || it.base <= 0) ? 0 : Math.max(0, it.low - fee(it.base, it.low));
+  const value = it => it.low > 0 ? it.low : it.avg > 0 ? it.avg : (it.traders[0] ? it.traders[0].price : 0);
+  function tierOf(it) {
+    if (S.ammoTier && it.ammo) { const p = it.ammo[0]; return p >= 50 ? 4 : p >= 40 ? 3 : p >= 30 ? 2 : p >= 20 ? 1 : 0; }
+    const total = value(it) * (it.count || 1), v = S.basis === "total" ? total : total / (it.w * it.h);
+    let t = 0; THRESHOLDS.forEach((th, k) => { if (v >= th) t = k + 1; }); return t;
+  }
+  const portrait = name => S.portraits && TRADER_ID[name]
+    ? '<img class="pt" src="https://assets.tarkov.dev/' + TRADER_ID[name] + '.webp" alt="" onerror="this.style.visibility=\'hidden\'">' : "";
+
+  // ---- the price box ----
+  function box(it) {
+    const tier = tierOf(it), tc = TIER_COLORS[tier], text = "#eef0f4";
+    const junk = S.dimJunk && tier === 0;
+    const tierCol = S.tiers ? tc : text;
+    const slots = it.w * it.h, perSlot = v => S.perSlot && slots > 1 ? '<span class="s">· ' + money(v / slots) + "/slot</span>" : "";
+    const fleaNet = net(it), best = it.traders[0];
+    const anyPt = S.portraits && (S.trader || S.allTraders) && it.traders.length > 0 && !S.compact;
+    const ind = anyPt ? '<span class="ind"></span>' : "";
+    const row = (k, v, col, sub, pt) => '<div class="pbr">' + (pt != null ? pt || ind : ind) + '<span class="k">' + esc(k) + '</span><span class="v"' +
+      (col ? ' style="color:' + col + '"' : "") + ">" + esc(v) + "</span>" + (sub || "") + "</div>";
+    let first = true;
+    const priceCol = () => { const c = first && S.tiers ? TIER_COLORS[tierOfPrice(it)] : null; first = false; return c; };
+
+    let h = '<div class="pbh"><span class="nm" style="color:' + (S.tiers && S.tierName ? tc : text) + '">' + esc(it.name.length > 30 ? it.short : it.name) + "</span>";
+    if ((S.tiers && S.tierLabel) || junk) h += '<span class="pl" style="color:' + tc + ";background:" + tc + '26">' + TIER_NAMES[junk ? 0 : tier] + "</span>";
+    h += "</div>";
+
+    if (S.compact) {
+      if (it.count) h += row("Stack (" + it.count + "):", money(value(it) * it.count), priceCol());
+      if (fleaNet > 0 && (!best || fleaNet >= best.price)) h += row("Flea:", money(fleaNet), priceCol());
+      else if (best) h += row(best.name + ":", money(best.price), priceCol(), "", portrait(best.name) || null);
+      else h += row("Not sellable", "", null);
+    } else {
+      if (S.ammo && it.ammo) h += row("Ammo:", "Pen " + it.ammo[0] + " · Dmg " + it.ammo[1] + (it.ammo[3] > 1 ? "×" + it.ammo[3] : "") + " · Armor " + it.ammo[2] + " %");
+      if (S.keys && it.key) h += row("Key:", (it.key[0] || "unknown map") + " · " + (it.key[1] != null && it.key[2] ? it.key[1] + "/" + it.key[2] : it.key[2]) + " uses");
+      if (it.count) h += row("Stack (" + it.count + "):", money(value(it) * it.count), priceCol());
+      if (S.flea) h += it.noFlea ? row("Flea:", "banned", "#8a93a3") : it.low > 0 ? row("Flea:", money(it.low), priceCol(), perSlot(it.low)) : row("Flea:", "no offers", "#8a93a3");
+      if (S.net && fleaNet > 0) h += row("After fee:", money(fleaNet), priceCol(), '<span class="s">· −' + money(it.low - fleaNet) + " fee</span>");
+      if (S.avg && it.avg > 0) h += row("Avg 24h:", money(it.avg), priceCol(), perSlot(it.avg));
+      const tr = S.allTraders ? it.traders : S.trader ? it.traders.slice(0, 1) : [];
+      tr.forEach(t => { h += row(t.name + ":", money(t.price), priceCol(), perSlot(t.price), portrait(t.name) || null); });
+      if ((S.trader || S.allTraders) && it.traders.length === 0) h += row("Trader:", "not sellable", "#8a93a3");
+      if (S.best && fleaNet > 0 && best) {
+        const flea = fleaNet > best.price;
+        h += '<div class="pbbar" style="background:color-mix(in srgb,' + S.accent + ' 22%,transparent);color:color-mix(in srgb,' + S.accent + ',#fff 45%)"><span>✓ ' +
+          (flea ? "Sell on the flea market" : "Sell to " + esc(best.name)) + "</span><span>+" + money(Math.abs(fleaNet - best.price)) + "</span></div>";
+      }
+    }
+    const pic = S.picture ? '<div class="pic"><img src="' + it.img + '" alt="" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{textContent:\'' +
+      esc(it.short).replace(/'/g, "") + '\'}))"></div>' : "";
+    const cls = "pb " + (S.picture ? S.side : "") + (S.tiers && S.frame && tier > 0 && !junk ? " framed" : "") + (junk ? " junk" : "");
+    const border = S.tiers && S.frame && tier > 0 && !junk ? ' style="border-color:' + tc + '"' : "";
+    return '<div class="' + cls + '"' + border + ">" + pic + '<div class="pbc">' + h + "</div></div>";
+  }
+  // the price itself keeps the color of what the item sells for (also for ammo)
+  function tierOfPrice(it) {
+    const total = value(it) * (it.count || 1), v = S.basis === "total" ? total : total / (it.w * it.h);
+    let t = 0; THRESHOLDS.forEach((th, k) => { if (v >= th) t = k + 1; }); return t;
+  }
+  // size + opacity of the settings; never wider than its place (phones)
+  function boxStyle(el, base, maxW) {
+    base = (base || 1) * S.size / 100;
+    el.style.opacity = S.opacity / 100;
+    el.style.zoom = 1;
+    const room = maxW || (el.parentNode ? el.parentNode.clientWidth : 0);
+    const natural = el.offsetWidth;
+    el.style.zoom = room && natural ? Math.min(base, room / natural) : base;
+  }
+
+  // ---- stash ----
+  const stash = $("#stash"), pop = $("#pop"), pinned = $("#pinned"), preview = $("#preview");
+  let current = ITEMS[0], shown = null;
+  function cellHtml(it) {
+    let c = '<img src="' + it.img + '" alt="' + esc(it.name) + '" loading="lazy" onerror="this.remove()"><span class="ph">' + esc(it.short) + "</span>";
+    c += '<span class="sn">' + esc(it.short) + "</span>";
+    if (it.count) c += '<span class="cnt">' + it.count + "</span>";
+    if (it.key && it.key[1] != null) c += '<span class="cnt red">' + it.key[1] + "/" + it.key[2] + "</span>";
+    return c;
+  }
+  function buildStash() {
+    stash.innerHTML = "";
+    ITEMS.forEach((it, k) => {
+      const d = document.createElement("div");
+      d.className = "cell"; d.tabIndex = 0;
+      d.style.gridColumn = "span " + it.w; d.style.gridRow = "span " + it.h;
+      d.innerHTML = cellHtml(it);
+      d.setAttribute("aria-label", it.name);
+      d.onpointerenter = e => { if (e.pointerType !== "touch") show(it, e); };
+      d.onpointermove = e => { if (e.pointerType !== "touch") place(e); };
+      d.onpointerleave = e => { if (e.pointerType !== "touch") hide(); };
+      d.onclick = () => pin(it, d);
+      d.onfocus = () => pin(it, d);
+      stash.appendChild(d);
+      it.el = d;
+    });
+    // the placeholder text only shows when the picture did not load
+    stash.querySelectorAll(".cell img").forEach(img => img.addEventListener("load", () => { const p = img.parentNode.querySelector(".ph"); if (p) p.remove(); }));
+  }
+  function show(it, e) { shown = it; current = it; pop.innerHTML = box(it); pop.hidden = false; boxStyle(pop.firstChild, 1, innerWidth - 24); place(e); renderPreview(); }
+  function hide() { pop.hidden = true; shown = null; }
+  function place(e) {
+    const wrap = pop.parentNode.getBoundingClientRect(), b = pop.getBoundingClientRect();
+    let x = e.clientX - wrap.left + 18, y = e.clientY - wrap.top + 14;
+    if (e.clientX + 18 + b.width > window.innerWidth - 8) x = e.clientX - wrap.left - b.width - 14;
+    if (e.clientY + 14 + b.height > window.innerHeight - 8) y = e.clientY - wrap.top - b.height - 10;
+    pop.style.left = Math.max(0, x) + "px"; pop.style.top = y + "px";
+  }
+  function pin(it, el) {
+    current = it;
+    stash.querySelectorAll(".cell.on").forEach(c => c.classList.remove("on"));
+    if (el) el.classList.add("on");
+    renderPreview();
+    if (window.matchMedia("(hover: none)").matches) { pinned.innerHTML = box(it); boxStyle(pinned.firstChild); pinned.hidden = false; }
+  }
+  function renderPreview() { preview.innerHTML = box(current); boxStyle(preview.firstChild, 0.78); }
+  function refresh() {
+    renderPreview();
+    if (shown && !pop.hidden) { pop.innerHTML = box(shown); boxStyle(pop.firstChild, 1, innerWidth - 24); }
+    if (!pinned.hidden) { pinned.innerHTML = box(current); boxStyle(pinned.firstChild); }
+    renderTierList();
+    hero.render();
+  }
+
+  // ---- settings ----
+  document.querySelectorAll(".ptabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".ptabs button").forEach(x => x.classList.toggle("on", x === b));
+    document.querySelectorAll(".ppage").forEach(p => p.hidden = p.dataset.page !== b.dataset.tab);
+  });
+  document.querySelectorAll("[data-set]").forEach(i => i.onchange = () => { S[i.dataset.set] = i.checked; if (i.dataset.set === "intel") {} refresh(); });
+  document.querySelectorAll("[data-seg]").forEach(seg => seg.querySelectorAll("button").forEach(b => b.onclick = () => {
+    seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+    S[seg.dataset.seg] = b.dataset.v;
+    if (seg.dataset.seg === "mode") loadPrices(); else refresh();
+  }));
+  document.querySelectorAll("[data-range]").forEach(r => r.oninput = () => {
+    S[r.dataset.range] = +r.value;
+    $(r.dataset.range === "size" ? "#sizeV" : "#opV").textContent = r.value + " %";
+    refresh();
+  });
+  const sw = $("#swatches");
+  ACCENTS.forEach((c, k) => {
+    const b = document.createElement("button");
+    b.style.background = c; b.setAttribute("aria-label", "Accent " + (k + 1));
+    if (k === 0) b.classList.add("on");
+    b.onclick = () => { S.accent = c; sw.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); $("#try").style.setProperty("--accent", c); refresh(); };
+    sw.appendChild(b);
+  });
+  function renderTierList() {
+    $("#tierlist").innerHTML = TIER_NAMES.map((n, k) => '<b style="color:' + TIER_COLORS[k] + '">' + n + "</b><span>" +
+      (k === 0 ? "below " + money(THRESHOLDS[0]) : "from " + money(THRESHOLDS[k - 1])) + (S.basis === "slot" ? " per slot" : "") + "</span>").join("");
+  }
+
+  // ---- live prices from tarkov.dev ----
+  const FIELDS = "id name shortName width height basePrice avg24hPrice lastLowPrice types gridImageLink " +
+    "sellFor { priceRUB vendor { name normalizedName } } " +
+    "properties { ...on ItemPropertiesAmmo { penetrationPower damage armorDamage projectileCount } ...on ItemPropertiesKey { uses } }";
+  async function gql(query) {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query }) });
+    const j = await r.json();
+    if (!j.data) throw new Error("no data");
+    return j.data;
+  }
+  function fromApi(x, old) {
+    const traders = (x.sellFor || []).filter(s => s.vendor && s.vendor.normalizedName !== "flea-market" && s.priceRUB > 0)
+      .map(s => ({ name: s.vendor.name, price: s.priceRUB })).sort((a, b) => b.price - a.price);
+    const p = x.properties || {};
+    const it = old || {};
+    Object.assign(it, { id: x.id, name: x.name, short: x.shortName || x.name, w: x.width || 1, h: x.height || 1, base: x.basePrice || 0,
+      low: x.lastLowPrice || 0, avg: x.avg24hPrice || 0, traders, noFlea: (x.types || []).includes("noFlea"), img: x.gridImageLink || ASSET(x.id) });
+    if (p.penetrationPower != null) it.ammo = [p.penetrationPower, p.damage, p.armorDamage, p.projectileCount || 1];
+    if (p.uses != null) it.key = [it.key ? it.key[0] : "", it.key ? it.key[1] : null, p.uses];
+    return it;
+  }
+  const state = $("#liveState");
+  async function loadPrices() {
+    state.className = "live"; state.textContent = "Loading prices from tarkov.dev …";
+    try {
+      const ids = JSON.stringify(ITEMS.map(i => i.id));
+      const d = await gql("{ items(ids: " + ids + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
+      const byId = {}; d.items.forEach(x => byId[x.id] = x);
+      ITEMS.forEach(it => { if (byId[it.id]) fromApi(byId[it.id], it); });
+      state.className = "live ok"; state.textContent = "● Live " + (S.mode === "pve" ? "PvE" : "PvP") + " prices from tarkov.dev";
+      buildStash();
+    } catch (e) {
+      state.className = "live off"; state.textContent = "Example prices – tarkov.dev is not reachable right now";
+    }
+    refresh();
+  }
+
+  // ---- search any item ----
+  const q = $("#q"), sugg = $("#sugg");
+  let tmr = null, results = [];
+  q.addEventListener("input", () => {
+    clearTimeout(tmr);
+    const v = q.value.trim();
+    if (v.length < 3) { sugg.hidden = true; return; }
+    tmr = setTimeout(async () => {
+      try {
+        const d = await gql("{ items(name: " + JSON.stringify(v) + (S.mode === "pve" ? ", gameMode: pve" : "") + ") { " + FIELDS + " } }");
+        results = d.items.slice(0, 8).map(x => fromApi(x));
+        sugg.innerHTML = results.length ? results.map((r, k) => '<button data-k="' + k + '"><img src="' + r.img + '" alt="">' + esc(r.name) +
+          '<span class="p">' + (r.low ? money(r.low) : "") + "</span></button>").join("") : '<button disabled>Nothing found</button>';
+      } catch (e) {
+        sugg.innerHTML = '<button disabled>Live search needs tarkov.dev – it is not reachable right now</button>';
+      }
+      sugg.hidden = false;
+    }, 300);
+  });
+  sugg.addEventListener("click", e => {
+    const b = e.target.closest("button[data-k]"); if (!b) return;
+    const it = results[+b.dataset.k];
+    ITEMS.unshift(it); buildStash(); sugg.hidden = true; q.value = "";
+    pin(it, it.el); it.el.scrollIntoView({ block: "nearest" });
+    pinned.innerHTML = box(it); boxStyle(pinned.firstChild); pinned.hidden = false;
+  });
+  document.addEventListener("click", e => { if (!e.target.closest(".search")) sugg.hidden = true; });
+
+  const RAW_ITEMS = ITEMS.slice();   // the hero keeps the demo items, also after searching
+
+  // ---- hero: the price box changes every few seconds ----
+  const hero = (function () {
+    const card = $("#card"), dots = $("#dots");
+    const picks = [0, 8, 5, 2, 13, 15];   // LEDX, marked key, ammo, Grizzly, bandage, red keycard
+    let i = 0, timer = null;
+    picks.forEach((p, k) => { const b = document.createElement("button"); b.setAttribute("aria-label", "Example " + (k + 1)); b.onclick = () => { go(k); start(); }; dots.appendChild(b); });
+    function render() {
+      const it = RAW_ITEMS[picks[i]];
+      card.innerHTML = box(it);
+      card.firstChild.style.zoom = 1;
+      const natural = card.firstChild.offsetWidth, room = card.clientWidth;
+      card.firstChild.style.zoom = Math.min(1.12, room / natural);
+      [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    }
+    function go(k) {
+      i = (k + picks.length) % picks.length;
+      card.classList.add("out");
+      setTimeout(() => { render(); card.classList.remove("out"); }, 350);
+    }
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function start() { clearInterval(timer); if (!reduced) timer = setInterval(() => go(i + 1), 4000); }
+    card.onmouseenter = () => clearInterval(timer); card.onmouseleave = start;
+    return { render, start };
+  })();
+  buildStash();
+  renderTierList();
+  hero.render(); hero.start();
+  renderPreview();
+  loadPrices();
+})();
+</script>
 </body>
 </html>
