@@ -391,7 +391,17 @@ public sealed partial class SettingsForm : Form
         _tips.SetToolTip(github, L.T("Tarkov Appraiser on GitHub"));
         github.Click += (_, _) => OpenProjectPage();
 
+        // website button left of the GitHub button
+        var website = new Pill { Tag = "chrome", Width = 34, Height = 34, Margin = new Padding(10, 3, 0, 3), IconName = "globe" };
+        _tips.SetToolTip(website, L.T("Tarkov Appraiser website"));
+        website.Click += (_, _) =>
+        {
+            try { Process.Start(new ProcessStartInfo(Updates.WebsiteUrl) { UseShellExecute = true }); }
+            catch (Exception ex) { Log.Write("Could not open the website: " + ex.Message, true); }
+        };
+
         _bottom.Controls.Add(github);
+        _bottom.Controls.Add(website);
         _bottom.Controls.Add(btnReset);
         _bottom.Controls.Add(_savedLbl);
 

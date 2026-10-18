@@ -22,6 +22,8 @@ namespace TarkovPriceOverlay;
 static class Program
 {
     [STAThread]
+    public static bool JustUpdated;   // started by the updater: say so, do not open the settings window
+
     static void Main(string[] args)
     {
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
@@ -34,6 +36,7 @@ static class Program
 
         // one instance only; right after an update the old version may still be closing: wait for it
         bool updated = args.Contains("--updated");
+        JustUpdated = updated;
         using var mutex = new Mutex(false, "TarkovAppraiser_SingleInstance");
         bool owned;
         try { owned = mutex.WaitOne(updated ? 15000 : 0); }

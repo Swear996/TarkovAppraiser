@@ -61,7 +61,7 @@ Press **F8**, or switch on the **automatic mode** and you don't even need a key.
 - **History** of the last 20 items, also as a movable in-game list (**Alt+F8**), with a **raid total**
 - **Statistics** – value checked over all raids, best raid, most valuable finds
 - Themes and colors, PvP and PvE prices, many game languages, English and German interface
-- Any screen resolution, **one-click updates**, FAQ in the settings
+- Any screen resolution, **one-click updates** (asked at startup), FAQ in the settings
 
 ## Screenshots
 

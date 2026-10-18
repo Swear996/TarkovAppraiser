@@ -381,35 +381,19 @@ class MainForm : Form
         _menu.Items.Insert(at, new ToolStripMenuItem(L.T("Update available") + $": {release.Version} …", null, (_, _) => AskForUpdate()));
         ApplyTrayTheme();
 
-        _tray.ShowBalloonTip(10000, UpdateTitle,
-            string.Format(L.T("Version {0} is available (you have {1}). Click here to update."), release.Version, Changelog.Current),
-            ToolTipIcon.Info);
+        // popup: "New Update Available" - Download Now / Skip
+        BeginInvoke(new Action(AskForUpdate));
     }
 
     Updates.Release? _release;
     bool _updating;
-
-    // "Update now": download the new TarkovAppraiser.exe, swap it and restart
-    async void AskForUpdate()
+    async Task InstallUpdateAsync()
     {
-        if (_release == null || _updating) return;
-        var s = SettingsStore.Current;
-        var palette = new UiDialog.Palette(Themes.FromArgb(s.ThemeBackArgb), Themes.FromArgb(s.ThemePanelArgb),
-                                           Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
-        int choice = UiDialog.Show(null, palette, L.T("Update available"),
-            string.Format(L.T("Version {0} is ready (you have {1}). Tarkov Appraiser downloads it and restarts - your settings stay."),
-                _release.Version, Changelog.Current),
-            0, L.T("Update now"), L.T("What's new"), L.T("Later"));
-        if (choice == 1) { OpenUpdatePage(); return; }
-        if (choice != 0) return;
-
-        if (_release.DownloadUrl == null)
-        {
-            OpenUpdatePage();   // no exe attached to the release: download page
-            return;
-        }
+        if (_release?.DownloadUrl == null || _updating) return;
         _updating = true;
-        _tray.ShowBalloonTip(3000, "Tarkov Appraiser", L.T("Downloading the update …"), ToolTipIcon.Info);
+        Log.Write($"Installing update {_release.Version}");
+        _tray.ShowBalloonTip(3000, "Tarkov Appraiser",
+            string.Format(L.T("Updating to version {0} …"), _release.Version), ToolTipIcon.Info);
         string? error = await Updates.InstallAsync(_release.DownloadUrl);
         if (error == null)
         {
@@ -419,10 +403,34 @@ class MainForm : Form
         }
         _updating = false;
         Log.Write("Update failed: " + error, true);
+        var s = SettingsStore.Current;
+        var palette = new UiDialog.Palette(Themes.FromArgb(s.ThemeBackArgb), Themes.FromArgb(s.ThemePanelArgb),
+                                           Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
         if (UiDialog.Show(null, palette, L.T("Update failed"),
                 L.T("The update could not be installed automatically. Download it from the release page instead?") + "\n\n" + error,
                 0, L.T("Open download page"), L.T("Cancel")) == 0)
             OpenUpdatePage();
+    }
+
+    // "Update now": download the new TarkovAppraiser.exe, swap it and restart
+    async void AskForUpdate()
+    {
+        if (_release == null || _updating) return;
+        var s = SettingsStore.Current;
+        var palette = new UiDialog.Palette(Themes.FromArgb(s.ThemeBackArgb), Themes.FromArgb(s.ThemePanelArgb),
+                                           Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
+        int choice = UiDialog.Show(null, palette, L.T("New Update Available"),
+            string.Format(L.T("Version {0} is available (you have {1}). Tarkov Appraiser downloads it and restarts - your settings stay."),
+                _release.Version, Changelog.Current),
+            0, L.T("Download Now"), L.T("Skip"));
+        if (choice != 0) return;   // Skip: asked again at the next start (or via the tray menu)
+
+        if (_release.DownloadUrl == null)
+        {
+            OpenUpdatePage();   // no exe attached to the release: download page
+            return;
+        }
+        await InstallUpdateAsync();
     }
 
     void OpenUpdatePage()
@@ -645,7 +653,9 @@ class MainForm : Form
 
         UpdateHistoryWindow();   // in-game history list, when it was open last time
 
-        if (!SettingsStore.Current.WelcomeDone)
+        if (Program.JustUpdated)
+            _tray.ShowBalloonTip(5000, "Tarkov Appraiser", string.Format(L.T("Updated to version {0}."), Changelog.Current), ToolTipIcon.Info);
+        else if (!SettingsStore.Current.WelcomeDone)
             BeginInvoke(new Action(ShowWelcome));
         else if (!SettingsStore.Current.StartMinimized)
             BeginInvoke(new Action(() => OpenSettings()));

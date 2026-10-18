@@ -10,10 +10,15 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.5";
+    public const string Current = "1.6";
 
     public static readonly ChangelogEntry[] Entries =
     {
+        new("1.6", "2026-10-18", new[]
+        {
+            "New update popup at startup: \"New Update Available\" with \"Download Now\" or \"Skip\" - Download Now installs it and restarts, your settings stay.",
+            "New website button next to the GitHub button in the settings."
+        }),
         new("1.5", "2026-10-18", new[]
         {
             "Updates are shown in the settings window too: \"Update to v…\" under the menu and an Updates card on the About page.",

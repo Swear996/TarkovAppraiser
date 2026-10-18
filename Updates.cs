@@ -17,6 +17,9 @@ static class Updates
     // project page (GitHub button in the settings window), null while no repository is set
     public static string? PageUrl => Configured ? "https://github.com/" + Repo : null;
 
+    // website (globe button next to the GitHub button)
+    public const string WebsiteUrl = "https://swear996.github.io/TarkovAppraiser/";
+
     // DownloadUrl: the TarkovAppraiser.exe attached to the release (null = only the release page)
     public sealed record Release(string Tag, string Url, string? DownloadUrl = null)
     {
