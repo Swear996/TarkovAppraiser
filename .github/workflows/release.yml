@@ -38,6 +38,12 @@ jobs:
       - name: Build (small, needs .NET 8)
         run: dotnet publish TarkovPriceOverlay.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -o dist
 
+      - name: Version without the "v" (release title "Tarkov Appraiser 1.5")
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          "VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
       - name: Release notes from Changelog.cs
         shell: pwsh
         run: |
@@ -78,7 +84,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Tarkov Appraiser ${{ github.ref_name }}
+          name: Tarkov Appraiser ${{ env.VERSION }}
           make_latest: true
           body_path: release-notes.md
           files: |
