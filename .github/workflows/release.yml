@@ -1,0 +1,85 @@
+# Builds TarkovAppraiser.exe and publishes a GitHub release when a version tag is pushed.
+#   git tag v1.1
+#   git push origin v1.1
+# The release notes are taken from the matching entry in Changelog.cs.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('TarkovPriceOverlay.csproj') }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Check that tag, Changelog and project version match
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          $cs = Get-Content Changelog.cs -Raw
+          if ($cs -notmatch ('Current = "' + [regex]::Escape($v) + '"')) { throw "Tag v$v does not match Changelog.Current" }
+          $proj = Get-Content TarkovPriceOverlay.csproj -Raw
+          if ($proj -notmatch ('<Version>' + [regex]::Escape($v) + '(\.0)?</Version>')) { throw "Tag v$v does not match <Version> in the .csproj" }
+
+      - name: Build (small, needs .NET 8)
+        run: dotnet publish TarkovPriceOverlay.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -o dist
+
+      - name: Release notes from Changelog.cs
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          $cs = Get-Content Changelog.cs -Raw
+          $m = [regex]::Match($cs, 'new\("' + [regex]::Escape($v) + '",\s*"[^"]*",\s*new\[\]\s*\{(.*?)\}\)', 'Singleline')
+          if (-not $m.Success) { throw "No changelog entry for $v" }
+          $items = [regex]::Matches($m.Groups[1].Value, '"((?:[^"\\]|\\.)*)"') | ForEach-Object { '- ' + ($_.Groups[1].Value -replace '\\"', '"') }
+          $sha = Get-ChildItem dist/*.exe | ForEach-Object { '| ' + $_.Name + ' | `' + (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower() + '` |' }
+          $notes = @(
+            "## What's new"
+            ""
+            $items
+            ""
+            "## Download"
+            "Download **TarkovAppraiser.exe** below and start it. Already using Tarkov Appraiser? It offers the update by itself."
+            ""
+            "**Requirement:** [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0) - the .NET 8 SDK or the .NET 8 Desktop Runtime has to be installed."
+            ""
+            "Windows may warn about an unknown app the first time: click *More info* > *Run anyway*."
+            ""
+            "## How to use"
+            "- **F8** - hover an item in Tarkov and press F8, the price box appears next to the mouse."
+            "- **Automatic mode** - or just rest the mouse on an item, no key needed. Switch it on in the welcome window or under *Settings > Detection > Automatic mode*; **Ctrl+F8** pauses it."
+            "- **Shift+F8** - type how many are in a stack to see the value of exactly that many."
+            ""
+            "Needs Windows 10 (version 2004 or newer) or Windows 11. Run Tarkov in *Borderless* or *Windowed* mode."
+            ""
+            "<details><summary>SHA-256 checksums</summary>"
+            ""
+            "| File | SHA-256 |"
+            "|---|---|"
+            $sha
+            ""
+            "</details>"
+          ) -join "`n"
+          Set-Content release-notes.md $notes -Encoding utf8
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Tarkov Appraiser ${{ github.ref_name }}
+          make_latest: true
+          body_path: release-notes.md
+          files: |
+            dist/TarkovAppraiser.exe
