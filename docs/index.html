@@ -580,7 +580,10 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
       else h += row(t("Not sellable"), "", null);
     } else {
       if (S.ammo && it.ammo) h += row(t("Ammo:"), "Pen " + it.ammo[0] + " · Dmg " + it.ammo[1] + (it.ammo[3] > 1 ? "×" + it.ammo[3] : "") + " · Armor " + it.ammo[2] + " %");
-      if (S.keys && it.key) h += row(t("Key:"), (it.key[0] || t("unknown map")) + " · " + (it.key[1] != null && it.key[2] ? it.key[1] + "/" + it.key[2] : it.key[2]) + " " + t("uses"));
+      if (S.keys && it.key) {
+        const map = it.key[0] || keyMapOf(it.id);   // no lock known (e.g. not used on any map): only the uses
+        h += row(t("Key:"), (map ? map + " · " : "") + (it.key[1] != null && it.key[2] ? it.key[1] + "/" + it.key[2] : it.key[2]) + " " + t("uses"));
+      }
       if (it.count) h += row(t("Stack") + " (" + it.count + "):", money(value(it) * it.count), priceCol());
       if (S.flea) h += it.noFlea ? row(t("Flea:"), t("banned"), "#8a93a3") : it.low > 0 ? row(t("Flea:"), money(it.low), priceCol(), perSlot(it.low)) : row(t("Flea:"), t("no offers"), "#8a93a3");
       if (S.net && fleaNet > 0) h += row(t("After fee:"), money(fleaNet), priceCol(), '<span class="s">· −' + money(it.low - fleaNet) + " " + t("fee") + "</span>");
@@ -761,6 +764,33 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     ITEMS.forEach(it => { if (items[it.id]) fromJson(it.id, items[it.id], null, it); });
   }
 
+  // ---- which map a key is for (the locks of all maps), loaded once ----
+  let KEYMAPS = null;
+  function keyMapOf(id) { return KEYMAPS && KEYMAPS[id] ? KEYMAPS[id].join(", ") : ""; }
+  function addLock(maps, keyId, map) {
+    if (!keyId || !map) return;
+    const l = maps[keyId] || (maps[keyId] = []);
+    if (!l.includes(map)) l.push(map);
+  }
+  async function loadKeyMaps() {
+    const maps = {};
+    try {
+      const d = await gql("{ maps { name locks { key { id } } } }");
+      (d.maps || []).forEach(m => (m.locks || []).forEach(l => addLock(maps, l.key && l.key.id, m.name)));
+    } catch (apiError) {
+      // reserve: the static map file (map names come from the language file)
+      const [d, n] = await Promise.all([jsonFile("maps"), jsonFile("maps_en").catch(() => ({ data: {} }))]);
+      const raw = d.data && (d.data.maps || d.data), names = (n && n.data) || {};
+      const list = Array.isArray(raw) ? raw : Object.values(raw || {});
+      list.forEach(m => {
+        if (!m || !m.locks) return;
+        const name = names[m.name] || (/ Name$/.test(m.name || "") ? m.normalizedName : m.name);
+        m.locks.forEach(l => addLock(maps, l && (typeof l.key === "string" ? l.key : l.key && l.key.id), name));
+      });
+    }
+    if (Object.keys(maps).length) { KEYMAPS = maps; refresh(); }
+  }
+
   async function loadPrices() {
     setState("", "Loading prices from tarkov.dev …");
     try {
@@ -774,6 +804,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
         await loadFromJson();   // the API is busy: the static price files
       }
       setState("ok", S.mode === "pve" ? "● Live PvE prices from tarkov.dev" : "● Live PvP prices from tarkov.dev");
+      if (!KEYMAPS) loadKeyMaps().catch(e => console.warn("key maps:", e));
       buildStash();
     } catch (e) {
       console.warn("tarkov.dev:", e);
