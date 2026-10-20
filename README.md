@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-5b8cff" alt="Windows 10 | 11">
   <img src="https://img.shields.io/badge/.NET-10-5b8cff" alt=".NET 10">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-5b8cff" alt="MIT license"></a>
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Ftarkov-appraiser-online.nicoruethrich.workers.dev%2Fbadge" alt="Users online">
   <a href="https://tarkov.dev"><img src="https://img.shields.io/badge/prices-tarkov.dev-5b8cff" alt="Prices from tarkov.dev"></a>
 </p>
 
@@ -122,8 +123,11 @@ reads the item name with the text recognition built into Windows and looks up th
 - **No** reading or writing of the game's memory
 - **No** injection, no hooks into the game process, no changed game files
 - **No** automated input – it never clicks, moves items or buys / sells for you
-- Network: only [tarkov.dev](https://tarkov.dev) (prices and item data) and GitHub (update check)
-- Nothing about you or your game is sent anywhere; settings and logs stay on your PC
+- Network: [tarkov.dev](https://tarkov.dev) (prices and item data), GitHub (update check) and a small counter
+  for the "players online" number in the settings
+- The counter only gets a random ID created once on your PC, every 10 minutes - no name, no game data, no IP
+  address is stored; IDs not seen for a day are deleted ([source of the counter](online-worker.js))
+- Nothing else about you or your game is sent anywhere; settings and logs stay on your PC
   (`%AppData%\TarkovAppraiser`)
 
 ## Risk of use
