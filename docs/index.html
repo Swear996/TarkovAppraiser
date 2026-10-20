@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -506,7 +506,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     if (onlineN == null) { box.hidden = true; return; }
     document.getElementById("onlineText").textContent =
       lang === "de" ? "Online: " + onlineN.toLocaleString("de-DE") + " Nutzer"
-                    : "Online: " + onlineN.toLocaleString("en-US") + (onlineN === 1 ? " user" : " users");
+                    : "Online: " + onlineN.toLocaleString("en-US") + (onlineN === 1 ? " User" : " Users");
     box.hidden = false;
   }
   async function loadOnline() {

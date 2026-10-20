@@ -16,7 +16,7 @@ public static class Changelog
     {
         new("2.0", "2026-10-20", new[]
         {
-            "New: \"Online: X users\" in the settings and on the website - how many players use Tarkov Appraiser right now (anonymous, see FAQ).",
+            "New: \"Online: X Users\" in the settings and on the website - how many players use Tarkov Appraiser right now (anonymous, see FAQ).",
             "Much better at low resolutions: similar names (M855 / M856, MP-155 / MP-153, 25- / 20-round magazines) are told apart, and names are recognized even when every reading misses a word.",
             "Stack count: a single round counts as 1, numbers with a 0 (60, 80) are read, and clearly read numbers are learned - at 1080p the program learns the digits by itself.",
             "Durability (e.g. 112/150) is read on the item under the mouse again.",

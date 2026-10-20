@@ -94,7 +94,7 @@ public sealed partial class SettingsForm
     void UpdateOnline()
     {
         if (Online.Count is not int n) { _onlineCard.Visible = false; return; }
-        _online.Text = string.Format(L.T(n == 1 ? "Online: {0} user" : "Online: {0} users"), n.ToString("N0"));
+        _online.Text = string.Format(L.T(n == 1 ? "Online: {0} User" : "Online: {0} Users"), n.ToString("N0"));
         _onlineCard.Visible = true;
     }
 
