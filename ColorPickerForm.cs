@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Globalization;
 
 namespace TarkovPriceOverlay;
@@ -10,6 +10,12 @@ namespace TarkovPriceOverlay;
 // ------------------------------------------------------------
 sealed class ColorPickerForm : Form
 {
+    // scaled by Windows like the rest of the desktop (see Dpi.cs)
+    protected override void CreateHandle()
+    {
+        using (Dpi.ScaledByWindows()) base.CreateHandle();
+    }
+
     public event Action<Color>? ColorChanged;
 
     const int Pad = 14, AreaW = 248, AreaH = 150, HueH = 14, Sw = 22, SwCols = 9;

@@ -312,7 +312,7 @@ class MainForm : Form
             bool again;
             do   // switching the program language opens the window again in the new language, at the same place
             {
-                using var dlg = new WelcomeForm(SettingsStore.Current, PreviewOverlay);
+                using var dlg = new WelcomeForm(SettingsStore.Current, p => { using (Dpi.Exact()) PreviewOverlay(p); });
                 if (at is { } p) { dlg.StartPosition = FormStartPosition.Manual; dlg.Location = p; }
                 dlg.ShowDialog();
                 openSettings = dlg.OpenSettings;
@@ -762,7 +762,11 @@ class MainForm : Form
             bool reopen;
             do
             {
-                using var dlg = new SettingsForm(SettingsStore.Current, PreviewOverlay, ApplyNewSettings, () => LoadPricesAsync(false));
+                // the settings window is scaled by Windows (Dpi.cs): its buttons call back with exact pixels
+                using var dlg = new SettingsForm(SettingsStore.Current,
+                    p => { using (Dpi.Exact()) PreviewOverlay(p); },
+                    p => { using (Dpi.Exact()) ApplyNewSettings(p); },
+                    () => LoadPricesAsync(false));
                 if (page > 0) dlg.ShowPage(page);
                 page = 0;
                 dlg.HotkeyRecording += rec =>

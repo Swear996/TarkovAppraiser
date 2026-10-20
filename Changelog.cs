@@ -10,10 +10,23 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.8";
+    public const string Current = "1.9";
 
     public static readonly ChangelogEntry[] Entries =
     {
+        new("1.9", "2026-10-19", new[]
+        {
+            "Better item recognition at low resolutions: similar names like M855 / M856, MP-155 / MP-153 or 25- / 20-round magazines are told apart more often.",
+            "Items are also recognized when every reading misses a different word of the name (e.g. \"6B13 assault armor (EMR)\").",
+            "Stack count: a single round (no number in the corner) now counts as 1 instead of the full stack.",
+            "Stack count: numbers with a 0 (e.g. 60) are read again - the game draws the 0 with a slash.",
+            "Stack count: numbers that are read clearly are remembered, so at other screen sizes (e.g. 1080p) the program learns the digits by itself and also reads numbers like 80.",
+            "A tall panel edge next to the mouse is no longer taken for a tooltip.",
+            "Durability (e.g. 112/150) is read again on the item under the mouse - its light grey highlight was taken for text.",
+            "The settings, welcome and question windows now follow the Windows scaling (Settings > Display > Scale) - no more tiny windows on large or high-resolution screens.",
+            "Messages that are just a bit too long for one line get a wider window instead of a lonely last word.",
+            "Settings: in a big or maximized window the pages sit centered with a comfortable width, and the name next to the logo is no longer cut off. The page icons are a bit bigger and clearer."
+        }),
         new("1.8", "2026-10-18", new[]
         {
             "New error window: after an unexpected error you can send a report with one click or copy the details. If the program had to close, it offers the report at the next start.",

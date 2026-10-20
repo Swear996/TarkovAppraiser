@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
@@ -95,6 +95,7 @@ static class TooltipFinder
         double bestD = double.MaxValue;
         foreach (var r in boxes)
         {
+            if (r.Height > r.Width) continue;   // a tooltip is always wider than tall (a tall box is a panel edge, not a tooltip)
             double dx = Math.Max(0, Math.Max(r.Left - p.X, p.X - r.Right));
             double dy = Math.Max(0, Math.Max(r.Top - p.Y, p.Y - r.Bottom));
             double d = Math.Sqrt(dx * dx + dy * dy);

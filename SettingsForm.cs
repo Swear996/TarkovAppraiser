@@ -23,6 +23,12 @@ public sealed record Choice(string Value, string Text)
 // ------------------------------------------------------------
 public sealed partial class SettingsForm : Form
 {
+    // scaled by Windows like the rest of the desktop (see Dpi.cs)
+    protected override void CreateHandle()
+    {
+        using (Dpi.ScaledByWindows()) base.CreateHandle();
+    }
+
     // A page: the content sits on Body, which is moved up and down (mouse wheel or the thin
     // scroll bar on the right). No Windows scroll bars, so nothing scrolls sideways.
     sealed class PagePanel : Panel

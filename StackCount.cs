@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
@@ -37,6 +37,7 @@ static class StackCount
         var lum = Luminance(shot, area, tooltip, out var sat);
         var zones = CellCorners(lum, area, cursor, cell);
         Rectangle? numberZone = null;
+        Crop? numberCrop = null;
         foreach (var zone in zones)
         {
             int zbg = Background(lum, area.Width, zone);
@@ -47,6 +48,7 @@ static class StackCount
             if (numberZone == null)
             {
                 numberZone = zone;
+                numberCrop = crop;
                 _last = (crop, DateTime.UtcNow);
             }
             if (Known(crop, max) is int known)
@@ -89,6 +91,10 @@ static class StackCount
                 int best = votes[0].Key;
                 if (votes[0].Count() < 2 && votes.Count > 1) continue;
                 Log.Write($"Stack count{name}: cell corner {z.Width}x{z.Height} [{string.Join(" / ", seen)}] -> {best}");
+                // all three copies read the same: keep the picture. At screen sizes without built-in pictures
+                // (e.g. 1080 px) the program so learns the digits by itself and can later read numbers the
+                // text recognition fails on (like "80") digit by digit.
+                if (votes[0].Count() >= 3 && votes.Count == 1 && numberCrop != null) Remember(best, numberCrop, "read 3 of 3 times");
                 return best;
             }
         }
@@ -122,8 +128,27 @@ static class StackCount
                 return best;
             }
         }
+        // The game shows no number for a single item: the edges of the hovered cell were found and its
+        // corner is empty (no light pixels at all, not covered by the tooltip) -> 1
+        if (zones.Count > 0 && numberZone == null && !zones.Any(z => Covered(lum, area.Width, z)))
+        {
+            Log.Write($"Stack count{name}: [{string.Join(" / ", seen)}] -> 1 (empty corner)");
+            return 1;
+        }
         Log.Write($"Stack count{name}: [{string.Join(" / ", seen)}] -> not sure");
         return null;
+    }
+
+    // part of the zone is hidden by the tooltip (those pixels are marked with -1)
+    static bool Covered(int[] lum, int width, Rectangle z)
+    {
+        for (int y = Math.Max(0, z.Top); y < z.Bottom; y++)
+            for (int x = Math.Max(0, z.Left); x < Math.Min(width, z.Right); x++)
+            {
+                int i = y * width + x;
+                if (i < lum.Length && lum[i] < 0) return true;
+            }
+        return false;
     }
 
     // ------------------------------------------------------------
@@ -162,7 +187,7 @@ static class StackCount
         foreach (var zone in zones.Take(8))
         {
             int bg = Background(lum, area.Width, zone);
-            if (TextLine(lum, sat, area.Width, zone, bg + 40, (int)Math.Round(6 * fs)) is not Rectangle tz || tz.Width < 8) continue;
+            if (FindTextLine(lum, sat, area.Width, zone, ref bg, fs) is not Rectangle tz || tz.Width < 8) continue;
             if (tz.Left <= Math.Max(0, zone.Left)) continue;   // the text reaches the edge of the corner: cut off ("9/190" instead of "179/190")
             if (SettingsStore.Current.DebugLog && !debugSaved) { SaveRaw(shot, area, cursor, tooltip, label.ToLowerInvariant()); debugSaved = true; }
             if (ByGlyphs(lum, sat, area.Width, tz, bg, fs) is { } g)
@@ -184,11 +209,12 @@ static class StackCount
         foreach (var zone in zones.Take(4))
         {
             int bg = Background(lum, area.Width, zone);
-            var z = TextLine(lum, sat, area.Width, zone, bg + 40, (int)Math.Round(6 * fs));   // the text is clearly brighter than the picture's edges
+            var z = FindTextLine(lum, sat, area.Width, zone, ref bg, fs);   // the text is clearly brighter than the picture's edges
             if (z is not Rectangle tz || tz.Width < 8 || tz.Left <= Math.Max(0, zone.Left)) continue;
             foreach (var (lo, hi) in new[] { (bg + 3, bg + 40), (bg - 2, bg + 60) })
             {
                 using var bmp = Stretch(lum, sat, area.Width, tz, lo, hi, scale, 30, copies: 2);
+                if (SettingsStore.Current.DebugLog) SaveDebug(bmp, label.ToLowerInvariant().Replace(' ', '-') + $"-{lo}");   // what the text recognition got
                 var lines = await Ocr.ReadLinesAsync(bmp, splitGaps: false);
                 string text = string.Join(" ", lines.Select(x => x.Text));
                 seen.Add(text);
@@ -318,7 +344,12 @@ static class StackCount
                     if (dp[i] is not { } cur || t > cur.T)
                         dp[i] = (t, prev.S + c, new List<string>(prev.L) { $"{c} {s1:0.00}/{s2:0.00}" });
                 }
-            if (dp[n] is not { } res) return null;   // a character that is not known
+            if (dp[n] is not { } res)
+            {
+                // a narrow unknown piece at the very left is a bit of the item picture next to the text: skipped
+                if (text.Length == 0 && n <= 3) { scores.Add("skip " + n); start = -1; continue; }
+                return null;   // a character that is not known
+            }
             text.Append(res.S);
             scores.AddRange(res.L);
             start = -1;
@@ -358,6 +389,48 @@ static class StackCount
         var r = Rectangle.FromLTRB(x0 - 2, y0 - 2, x1 + 3, y1 + 3);
         r.Intersect(z);
         return r;
+    }
+
+    // The text line of a corner. The hovered item is drawn with a light grey (checkered) background: measured
+    // against the dark empty cells around it, the grey counted as "text" (seen: "112/150" on a hovered helmet,
+    // the reading got the grey block and only the bottom half of the digits). The text itself is almost white,
+    // so the line is searched with a threshold halfway between the background and the brightest pixels, and
+    // the background used afterwards is the one directly around the text.
+    static Rectangle? FindTextLine(int[] lum, int[] sat, int w, Rectangle zone, ref int bg, float fs)
+    {
+        int textH = (int)Math.Round(6 * fs);
+        var hist = new int[256];
+        int n = 0;
+        for (int y = Math.Max(0, zone.Top); y < zone.Bottom; y++)
+            for (int x = Math.Max(0, zone.Left); x < Math.Min(w, zone.Right); x++)
+            {
+                int i = y * w + x;
+                if (i >= lum.Length || lum[i] < 0 || sat[i] > 60) continue;
+                hist[lum[i]]++;
+                n++;
+            }
+        if (n == 0) return null;
+        // brightest 1 % of the corner = the text
+        int peak = 255;
+        for (int acc = 0; peak > 0; peak--) { acc += hist[peak]; if (acc >= Math.Max(3, n / 100)) break; }
+        int bright = Math.Max(bg + 40, (bg + peak) / 2);
+        var tz = TextLine(lum, sat, w, zone, bright, textH);
+        if (tz is not Rectangle r) return null;
+
+        // grey right around the text (a hovered item): lots of pixels clearly above the corner's background
+        // but below the text. Then everything up to just under the text counts as background, so the grey
+        // neither becomes part of the digits (look) nor a black block (text recognition).
+        int grey = 0, all = 0;
+        for (int y = r.Top; y < r.Bottom; y++)
+            for (int x = r.Left; x < r.Right; x++)
+            {
+                int v = lum[y * w + x];
+                if (v < 0) continue;
+                all++;
+                if (v >= bg + 40 && v < bright) grey++;
+            }
+        if (all > 0 && grey > all * 0.2) bg = Math.Max(bg, bright - 50);
+        return tz;
     }
 
     // OCR look-alikes inside "179/190" (seen in game: "179/tge", "IT/tge"): Ø O o D e -> 0, l I | i ! t -> 1, T -> 7,
@@ -895,7 +968,7 @@ static class StackCount
         {
             char c = ch switch
             {
-                'O' or 'o' or 'D' => '0',
+                'O' or 'o' or 'D' or 'ø' or 'Ø' => '0',   // the game font draws the 0 with a slash ("60" -> "6ø")
                 'l' or 'I' or '|' or 'i' => '1',
                 'S' or 's' => '5',
                 'B' => '8',

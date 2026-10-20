@@ -6,6 +6,12 @@
 // ------------------------------------------------------------
 sealed class UiDialog : Form
 {
+    // scaled by Windows like the rest of the desktop (see Dpi.cs)
+    protected override void CreateHandle()
+    {
+        using (Dpi.ScaledByWindows()) base.CreateHandle();
+    }
+
     public sealed record Palette(Color Back, Color Panel, Color Text, Color Accent);
 
     const int Pad = 24;
@@ -28,6 +34,13 @@ sealed class UiDialog : Form
         _border = Themes.Blend(p.Panel, p.Text, 0.16);
         int buttonsW = buttons.Sum(b => Math.Max(96, TextRenderer.MeasureText(b, Font).Width + 36) + 8) - 8;
         W = Math.Max(W, buttonsW + 2 * Pad);
+        // a short text that just misses one line ("... bottom" / "right).") gets a slightly wider window instead
+        const int MaxW = 560;
+        if (!text.Contains('\n'))
+        {
+            int oneLine = TextRenderer.MeasureText(text, Font, Size.Empty, TextFormatFlags.NoPrefix).Width + 6;
+            if (oneLine + 2 * Pad <= MaxW) W = Math.Max(W, oneLine + 2 * Pad);
+        }
 
         var titleLbl = new Txt
         {

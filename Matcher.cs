@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Globalization;
@@ -93,9 +93,68 @@ static class Matcher
         Log.Write("Tooltip candidates: " + string.Join(" | ", candidates));
 
         var r = Rank(candidates, idx, filter);
+        var tokens = Tokens(readings.SelectMany(x => x));
         if (r.Best != null && r.BestScore >= threshold)
-            return Decide(r, Tokens(readings.SelectMany(x => x)));
+            return Decide(r, tokens);
+
+        // Every reading lost a different word ("6813 armor (EMR)", "6813 ösault (EMR)"): together they
+        // still contain the whole name. Only used when nothing else matched.
+        var byWords = FindByWords(idx, tokens, filter, threshold);
+        if (byWords != null) return (byWords, threshold, byWords, null);
         return (null, r.BestScore, r.Best, null);
+    }
+
+    // The item whose words ALL appear somewhere in the readings (each reading may miss other words).
+    // Needs at least 3 words, the tooltip width must fit when it can be checked, and the result must be
+    // unique: a second item with as many words found and a similar fit means "not sure".
+    static Item? FindByWords(ItemIndex idx, List<string> tokens, Func<Item, bool>? filter, double threshold)
+    {
+        if (tokens.Count < 2) return null;
+        Item? best = null, second = null;
+        (int words, double fit) bestKey = (0, 0), secondKey = (0, 0);
+        foreach (var item in idx.Items)
+        {
+            if (item.NormName.Length == 0) continue;
+            var words = NameTokens(item.Name);
+            if (words.Count < 3) continue;
+            double sum = 0;
+            bool all = true;
+            foreach (var w in words)
+            {
+                double sim = tokens.Max(t => WordSimilarity(w, t));
+                if (sim < (w.Length <= 3 ? 0.85 : 0.7)) { all = false; break; }
+                sum += sim;
+            }
+            if (!all || (filter != null && !filter(item))) continue;
+            var key = (words.Count, sum / words.Count);
+            if (best == null || key.Item1 > bestKey.words || (key.Item1 == bestKey.words && key.Item2 > bestKey.fit))
+            {
+                if (best != null && best.Name != item.Name) { second = best; secondKey = bestKey; }
+                best = item; bestKey = key;
+            }
+            else if (item.Name != best.Name && (second == null || key.Item1 > secondKey.words ||
+                     (key.Item1 == secondKey.words && key.Item2 > secondKey.fit)))
+            {
+                second = item; secondKey = key;
+            }
+        }
+        if (best == null) return null;
+        if (second != null && secondKey.words == bestKey.words && bestKey.fit - secondKey.fit < 0.05)
+        {
+            Log.Write($"Words: ambiguous {best.Name} vs. {second.Name}");
+            return null;
+        }
+        Log.Write($"Tooltip match by words: {best.Name} ({bestKey.fit:P0} per word, {bestKey.words} words)");
+        return best;
+    }
+
+    // like Similarity, but short words ("6b13", "emr") count their confusions ("6813") correctly
+    static double WordSimilarity(string word, string read)
+    {
+        if (word == read) return 1;
+        int maxLen = Math.Max(word.Length, read.Length);
+        double d = Distance(word, read, maxLen);
+        return Math.Max(0, 1.0 - d / maxLen);
     }
 
     // The text of a tooltip in reading order: rows from top to bottom, words from left to right
@@ -238,10 +297,11 @@ static class Matcher
         }
         else
         {
-            // edit distance of the differing words to the closest read words; at least one edit better wins
+            // edit distance of the differing words to the closest read words; clearly closer wins
             double da = onlyA.Sum(t => ocr.Min(o => Distance(t, o, double.MaxValue)));
             double db = onlyB.Sum(t => ocr.Min(o => Distance(t, o, double.MaxValue)));
-            result = da <= db - 1 ? 1 : db <= da - 1 ? -1 : 0;
+            // half an edit: one typical OCR confusion ("m8ss" is M855, not M856; "2sround" is 25-round)
+            result = da <= db - 0.5 ? 1 : db <= da - 0.5 ? -1 : 0;
         }
 
         Log.Write($"Tie-break {a.Name} vs. {b.Name}: " +

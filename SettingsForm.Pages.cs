@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Media.Ocr;
 
@@ -13,12 +13,16 @@ public sealed partial class SettingsForm
     void BuildSidebar()
     {
         _side.Controls.Add(_logo);
+        // the name must stay on one line next to the logo: the font gets smaller until it fits
+        // (with Windows scaling the text can come out a little wider than at 100 %)
+        float nameSize = 11.5f;
+        while (nameSize > 9f && TextRenderer.MeasureText("Tarkov Appraiser", UiFont.Semi(nameSize)).Width > SideW - 72) nameSize -= 0.5f;
         _side.Controls.Add(new Txt
         {
             Text = "Tarkov Appraiser",
-            Font = UiFont.Semi(11.5f),   // the longer name fits next to the logo
-            Left = 64, Top = 29, Width = SideW - 68, Height = 24,
-            UseMnemonic = false, Tag = "title"
+            Font = UiFont.Semi(nameSize),
+            Left = 64, Top = 29, Width = SideW - 66, Height = 24,
+            UseMnemonic = false, Tag = "title", AutoEllipsis = false
         });
 
         // price status card at the bottom
@@ -101,7 +105,11 @@ public sealed partial class SettingsForm
     PagePanel AddPage(string title, string subtitle, string icon)
     {
         var page = new PagePanel { Tag = "page" };
-        page.Resize += (_, _) => FitCards(page);
+        page.Resize += (_, _) =>
+        {
+            int left = FitCards(page);
+            if (page.Visible) AlignHeader(left);
+        };
         _main.Controls.Add(page);
         _pages.Add(page);
         _pageInfo.Add((L.T(title), L.T(subtitle)));
@@ -128,24 +136,42 @@ public sealed partial class SettingsForm
         if (index == HistoryPage) { _history.Reload(); FitHistoryCard(); }   // current prices
         _pageTitle.Text = _pageInfo[index].Title;
         _pageSub.Text = _pageInfo[index].Sub;
-        FitCards(_pages[index]);
+        AlignHeader(FitCards(_pages[index]));
         RefreshNav();
     }
 
-    // Cards use the full width of the page (up to a comfortable maximum)
-    static void FitCards(PagePanel p)
+    // Cards use the full width of the page up to a comfortable maximum. In a wider window (maximized)
+    // the column of cards is centered, so labels and their controls stay close together.
+    // Returns the left edge of the cards (the page title is aligned with it).
+    const int MaxCardW = 1000;
+    static int FitCards(PagePanel p)
     {
-        int w = Math.Clamp(p.ClientSize.Width - CardX - 24, 300, 900);
+        int avail = p.ClientSize.Width - CardX - 24;
+        int w = Math.Clamp(avail, 300, MaxCardW);
+        int left = CardX + Math.Max(0, (avail - w) / 2);
         foreach (Control c in p.Body.Controls)
         {
-            if (c is Card && c.Width != w) c.Width = w;
+            if (c is Card)
+            {
+                if (c.Width != w) c.Width = w;
+                if (c.Left != left) c.Left = left;
+            }
             else if (c is FlowLayoutPanel flow)
             {
                 flow.Width = w;
+                flow.Left = left;
                 foreach (Control child in flow.Controls)
                     if (child.Width != w) child.Width = w;
             }
+            else if (c.Tag as string == "section") c.Left = left + 4;   // small headings between cards ("CHANGELOG")
         }
+        return left;
+    }
+
+    void AlignHeader(int left)
+    {
+        _pageTitle.Left = left;
+        _pageSub.Left = left;
     }
 
     void RefreshNav()

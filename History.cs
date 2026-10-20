@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
@@ -377,7 +377,7 @@ sealed class HistoryList : Control
         Themes.StyleMenu(m, Themes.FromArgb(s.ThemePanelArgb), Themes.FromArgb(s.ThemeTextArgb), Themes.FromArgb(s.ThemeAccentArgb));
         m.Opened += (_, _) => Themes.RoundCorners(m.Handle, Themes.Blend(Themes.FromArgb(s.ThemePanelArgb), Themes.FromArgb(s.ThemeTextArgb), 0.16));
         _menu = m;
-        m.Show(this, at);
+        using (Dpi.Like(this)) m.Show(this, at);   // the menu opens where the window is, also in the scaled settings window
     }
 
     protected override void OnPaint(PaintEventArgs e)

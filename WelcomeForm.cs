@@ -9,6 +9,12 @@ namespace TarkovPriceOverlay;
 // ------------------------------------------------------------
 sealed class WelcomeForm : Form
 {
+    // scaled by Windows like the rest of the desktop (see Dpi.cs)
+    protected override void CreateHandle()
+    {
+        using (Dpi.ScaledByWindows()) base.CreateHandle();
+    }
+
     const int W = 540, Pad = 28, CardW = W - 2 * Pad;
 
     public bool OpenSettings { get; private set; }      // "Let's go": the settings window opens next

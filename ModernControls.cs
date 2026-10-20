@@ -180,8 +180,9 @@ public sealed class NavButton : Button
 
         bool hasIcon = IconName.Length > 0;
         if (hasIcon)
-            Icons.Draw(g, IconName, new RectangleF(26, Height / 2f - 9, 18, 18),
-                Selected ? AccentColor : ForeColor, 1.8f);
+            // 20 px and a stronger line: the icons looked thin next to the text
+            Icons.Draw(g, IconName, new RectangleF(25, Height / 2f - 10, 20, 20),
+                Selected ? AccentColor : ForeColor, 2.1f);
 
         int textLeft = hasIcon ? 56 : 30;
         Color textBack = fill.HasValue && fill.Value.A != 0 ? fill.Value : UiPaint.ParentBack(this);
