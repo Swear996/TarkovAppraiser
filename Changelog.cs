@@ -10,23 +10,18 @@ public sealed record ChangelogEntry(string Version, string Date, string[] Items)
 // ------------------------------------------------------------
 public static class Changelog
 {
-    public const string Current = "1.9";
+    public const string Current = "2.0";
 
     public static readonly ChangelogEntry[] Entries =
     {
-        new("1.9", "2026-10-19", new[]
+        new("2.0", "2026-10-20", new[]
         {
-            "Better item recognition at low resolutions: similar names like M855 / M856, MP-155 / MP-153 or 25- / 20-round magazines are told apart more often.",
-            "Items are also recognized when every reading misses a different word of the name (e.g. \"6B13 assault armor (EMR)\").",
-            "Stack count: a single round (no number in the corner) now counts as 1 instead of the full stack.",
-            "Stack count: numbers with a 0 (e.g. 60) are read again - the game draws the 0 with a slash.",
-            "Stack count: numbers that are read clearly are remembered, so at other screen sizes (e.g. 1080p) the program learns the digits by itself and also reads numbers like 80.",
-            "A tall panel edge next to the mouse is no longer taken for a tooltip.",
-            "New: the settings show how many players are using Tarkov Appraiser right now (anonymous counter, see FAQ).",
-            "Durability (e.g. 112/150) is read again on the item under the mouse - its light grey highlight was taken for text.",
-            "The settings, welcome and question windows now follow the Windows scaling (Settings > Display > Scale) - no more tiny windows on large or high-resolution screens.",
-            "Messages that are just a bit too long for one line get a wider window instead of a lonely last word.",
-            "Settings: in a big or maximized window the pages sit centered with a comfortable width, and the name next to the logo is no longer cut off. The page icons are a bit bigger and clearer."
+            "New: \"Online: X users\" in the settings and on the website - how many players use Tarkov Appraiser right now (anonymous, see FAQ).",
+            "Much better at low resolutions: similar names (M855 / M856, MP-155 / MP-153, 25- / 20-round magazines) are told apart, and names are recognized even when every reading misses a word.",
+            "Stack count: a single round counts as 1, numbers with a 0 (60, 80) are read, and clearly read numbers are learned - at 1080p the program learns the digits by itself.",
+            "Durability (e.g. 112/150) is read on the item under the mouse again.",
+            "Windows follow the Windows scaling - no more tiny windows on big or high-resolution screens. Maximized, the settings sit centered.",
+            "Smaller fixes: no more panel edges taken for a tooltip, wider message windows instead of a lonely last word, the name next to the logo is no longer cut off, clearer page icons."
         }),
         new("1.8", "2026-10-18", new[]
         {

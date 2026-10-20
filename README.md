@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-5b8cff" alt="Windows 10 | 11">
   <img src="https://img.shields.io/badge/.NET-10-5b8cff" alt=".NET 10">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-5b8cff" alt="MIT license"></a>
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Ftarkov-appraiser-online.nicoruethrich.workers.dev%2Fbadge" alt="Users online">
   <a href="https://tarkov.dev"><img src="https://img.shields.io/badge/prices-tarkov.dev-5b8cff" alt="Prices from tarkov.dev"></a>
 </p>
 
