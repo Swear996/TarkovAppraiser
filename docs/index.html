@@ -163,11 +163,7 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
 
 /* ---------- try it: stash + settings + price box ---------- */
 .live{display:inline-block;margin-left:6px;font-size:13px;padding:2px 10px;border-radius:999px;background:var(--panel2);color:var(--muted)}
-.live.ok{color:var(--green);background:#5fbf6a1f}
-.online{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
-.online i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 #5fbf6a88;animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 #5fbf6a88}70%{box-shadow:0 0 0 7px #5fbf6a00}100%{box-shadow:0 0 0 0 #5fbf6a00}}
-@media (prefers-reduced-motion:reduce){.online i{animation:none}}.live.off{color:var(--warn);background:#e0a5261a}
+.live.ok{color:var(--green);background:#5fbf6a1f}.live.off{color:var(--warn);background:#e0a5261a}
 .try{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;align-items:start;position:relative}
 .stashcol{min-width:0}
 .search{position:relative;margin-bottom:14px}
@@ -302,7 +298,6 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
         <a class="btn ghost" href="#try"><span data-t="t6">Try it in the browser</span></a>
       </div>
       <p class="small"><span data-t="t7">Free &amp; open source · Windows 10 / 11 · Prices from tarkov.dev · No memory reading</span></p>
-      <span class="online" id="online" hidden><i></i><span id="onlineText"></span></span>
     </div>
     <div class="showcase">
       <div class="heroBox" id="card" aria-live="polite" aria-label="Example price box"></div>
@@ -497,28 +492,6 @@ footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
     refresh();
   });
   applyLang();
-
-  // ---- users online right now (the same counter the program shows in its settings) ----
-  const ONLINE_URL = "https://tarkov-appraiser-online.nicoruethrich.workers.dev/online";
-  let onlineN = null;
-  function showOnline() {
-    const box = document.getElementById("online");
-    if (onlineN == null) { box.hidden = true; return; }
-    document.getElementById("onlineText").textContent =
-      lang === "de" ? "Online: " + onlineN.toLocaleString("de-DE") + " Nutzer"
-                    : "Online: " + onlineN.toLocaleString("en-US") + (onlineN === 1 ? " user" : " users");
-    box.hidden = false;
-  }
-  async function loadOnline() {
-    try {
-      const r = await fetch(ONLINE_URL);
-      const j = await r.json();
-      if (typeof j.online === "number") { onlineN = j.online; showOnline(); }
-    } catch (e) { /* counter not reachable: the badge stays hidden */ }
-  }
-  loadOnline();
-  setInterval(loadOnline, 60000);
-  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", showOnline));
 
   const API = "https://api.tarkov.dev/graphql";
   const ASSET = id => "https://assets.tarkov.dev/" + id + "-grid-image.webp";

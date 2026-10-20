@@ -22,6 +22,7 @@ public static class Changelog
             "Stack count: numbers with a 0 (e.g. 60) are read again - the game draws the 0 with a slash.",
             "Stack count: numbers that are read clearly are remembered, so at other screen sizes (e.g. 1080p) the program learns the digits by itself and also reads numbers like 80.",
             "A tall panel edge next to the mouse is no longer taken for a tooltip.",
+            "New: the settings show how many players are using Tarkov Appraiser right now (anonymous counter, see FAQ).",
             "Durability (e.g. 112/150) is read again on the item under the mouse - its light grey highlight was taken for text.",
             "The settings, welcome and question windows now follow the Windows scaling (Settings > Display > Scale) - no more tiny windows on large or high-resolution screens.",
             "Messages that are just a bit too long for one line get a wider window instead of a lonely last word.",

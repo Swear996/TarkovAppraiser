@@ -48,6 +48,20 @@ public sealed partial class SettingsForm
         card.Controls.Add(_btnUpdate);
         _side.Controls.Add(card);
 
+        // players online: a small card in the style of the price card, just above it
+        _onlineCard.SetBounds(12, card.Top - 44, SideW - 24, 36);
+        _onlineDot.Font = UiFont.Text(8.5f);
+        _onlineDot.ForeColor = Color.FromArgb(76, 195, 138);
+        _onlineDot.SetBounds(14, 9, 14, 18);
+        _online.Font = UiFont.Text(8.5f);
+        _online.SetBounds(30, 9, _onlineCard.Width - 42, 18);
+        _onlineCard.Controls.Add(_onlineDot);
+        _onlineCard.Controls.Add(_online);
+        _onlineCard.Visible = false;   // until the counter answered
+        _side.Controls.Add(_onlineCard);
+        UpdateOnline();
+        Online.Changed += OnOnlineChanged;
+
         var version = _versionLbl;
         version.Font = UiFont.Text(8.5f);
         version.SetBounds(24, WindowH - 40, SideW - 30, 20);
@@ -61,8 +75,27 @@ public sealed partial class SettingsForm
         {
             if (_side.Height < 400) return;
             card.Top = _side.Height - 178;
+            _onlineCard.Top = card.Top - 44;
             version.Top = _side.Height - 40;
         };
+    }
+
+    readonly Card _onlineCard = new();
+    readonly Txt _onlineDot = new() { Text = "●", UseMnemonic = false, Tag = "dot" };
+    readonly Txt _online = new() { UseMnemonic = false, Tag = "label" };
+
+    void OnOnlineChanged()
+    {
+        if (IsDisposed) return;
+        if (InvokeRequired) { BeginInvoke(new Action(OnOnlineChanged)); return; }
+        UpdateOnline();
+    }
+
+    void UpdateOnline()
+    {
+        if (Online.Count is not int n) { _onlineCard.Visible = false; return; }
+        _online.Text = string.Format(L.T(n == 1 ? "Online: {0} user" : "Online: {0} users"), n.ToString("N0"));
+        _onlineCard.Visible = true;
     }
 
     // what the recognition currently uses (shown on the Detection page, refreshed every 2 s)
@@ -499,6 +532,8 @@ public sealed partial class SettingsForm
             "It is a fan project and not made by Battlestate Games - use it at your own risk." }),
         ("Where are my settings and the log?", new[] {
             "About › Open log & settings folder. Export and import your settings there too." }),
+        ("What does Tarkov Appraiser send over the internet?", new[] {
+            "Prices and item data come from tarkov.dev, the update check from GitHub. For the \"players online\" number it sends a random ID (created once on your PC) every 10 minutes - no name, no game data, no IP address is stored. Nothing else." }),
         ("How do I report a problem?", new[] {
             "Switch on the debug log under About, reproduce the problem, then use About › Report a problem. It copies the details and opens the report page." }),
     };

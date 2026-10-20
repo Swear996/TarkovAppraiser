@@ -660,6 +660,7 @@ class MainForm : Form
             _ = TarkovApi.LoadTraderPortraitsAsync();
         _ = StartPricesAsync();
         Updates.Found += OnUpdateFound;
+        Online.Start();   // anonymous "players online" counter (Online.cs)
         Updates.InstallRequested = AskForUpdate;
         if (SettingsStore.Current.CheckForUpdates)
             _ = CheckForUpdatesAsync();
