@@ -599,9 +599,14 @@ public sealed partial class SettingsForm
     {
         var c = NewCard(p, null);
         c.Controls.Add(_aboutLogo);
-        c.Controls.Add(Lbl("Tarkov Appraiser", 82, 18, 300, "title", 15f, semi: true));
-        c.Controls.Add(Stretch(Lbl("Version " + Changelog.Current + "  ·  " + L.T("Prices for your loot at a glance"), 82, 48, CardW - 98, "muted")));
-        c.NextY = 78;
+        // title and subtitle must not overlap (the title's box covered the subtitle) and the subtitle
+        // needs room for letters below the line (g, p, y)
+        var name = Lbl("Tarkov Appraiser", 82, 14, 300, "title", 15f, semi: true);
+        c.Controls.Add(name);
+        var sub = Lbl("Version " + Changelog.Current + "  ·  " + L.T("Prices for your loot at a glance"), 82, name.Bottom + 2, CardW - 98, "muted");
+        sub.Height = Math.Max(22, sub.Font.Height + 6);
+        c.Controls.Add(Stretch(sub));
+        c.NextY = Math.Max(80, sub.Bottom + 12);
         Done(p, c);
 
         c = NewCard(p, "Updates");
